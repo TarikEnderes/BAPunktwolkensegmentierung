@@ -20,8 +20,45 @@
 			\subsubsection{Convolutional Neural Networks}
 				
 			\subsubsection{Anpassungen für Semantische Segmentierung}
+				Klassische DCNNs haben Eigenschaften, die sie für die Verwendung zur Bildsegmentierung nicht ideal machen. 
+				\begin{itemize}
+					\item Der Einsatz von Downsampling führt zu verringerter Auflösung, die bei Klassifizierungsaufgaben nicht ins Gewicht fällt, für die Segmentierung aber essentiell ist. 
+					\item Neuronale Netze sind in der Regel gut geeignet, um Objekte unterschiedlicher Größe zu erkennen, wenn solche in der Lernphase präsentiert werden. Die Eigenschaften der Faltung, insbesondere dem begrenzten Sichtbereich beim Berechnen eines einzelnen Pixels ist allerdings für diese Problematik ungünstig.
+					\item Der wiederholte Einsatz von Convolutional Layers führen zu einem Verlust an Ortsinformation. Infolgedessen produzieren DCNNs bei Segmentierungsaufgaben verschwommene, oft verrauschte Ergebnisse ohne klare Kanten.
+				\end{itemize}
+			
+			Um diese Probleme zu lösen erhält das von DeepLab verwendete DCNN einige Anpassungen. Zunächst werden alle Fully Connected Layers durch Convolutional Layers ersetzt, um ein Fully Convolutional Network zu bilden. 
+			Noch dazu wird anstatt von Pooling Layers in den unteren Schichten Atrous Convolution eingesetzt, womit die Auflösung der Ausgabe erhöht wird. In den höheren Schichten werden auch hier Pooling Layers eingesetzt, um Speicherbedarf und Rechenzeit zu verbessern. 
+			Um die Größeninvarianz zu verbessern wird bei den unteren Schichten Atrous Spatial Pyramid Pooling verwendet.
+			
 		\subsection{Atrous Convolution}
+			Atrous Convolution, auch Dilated Convolution genannt, beschreibt eine Technik bei der eine Matrix mit einem spärlich bestückten Kernel gefaltet wird, wie in Abbildung \ref{fig:AtrousConv} illustriert.
+			
+				\begin{figure}
+					\centering
+					\includegraphics[]{img/AtrousConv.png}
+					\caption{Prinzip von Atrous Convolution}
+					\label{fig:AtrousConv}
+				\end{figure} 
+			Die Abstände der zu berücksichtigenden Werte in der Matrix wird dabei durch die s.g. Dilation Rate bzw. Erweiterungsrate (kurz Rate) festgelegt. Das Tatsächliche Sichtfeld des Filters wird also festgelegt durch die Größe des Kernels und die Rate bestimmt.\\ ein Filter mit einem Kernel der Größe 3x3 und einer Rate von 2, was dem Einfügen einer leeren Zeilen und Spalte zwischen den Werten entspricht, hat demnach ein Sichtfeld der Größe 5x5.
+			Dadurch wird das effektive Sichtfeld des Filters erhöht und es kann eine höhere Auflösung bei gleichen Rechenaufwand erreicht werden. Die Vorteile der Verwendung von Atrous Convolution für Bildsegmentierung sind in Abbildung \ref{fig:AtrousConvRes} dargestellt.
+				\begin{figure}
+					\centering
+					\includegraphics[width = 0.9\linewidth]{img/AtrousConvRes.png}
+					\caption{Beispielhaft dargestellte Vorteile von Atrous Convolution}
+					\label{fig:AtrousConvRes}
+				\end{figure} 
+		
 		\subsection{Atrous Spatial Pyramid Pooling}
+			Beim Atrous Spatial Pyramid Pooling werden mehrere parallele Convolutional Layers, die Atrous Convolutional Layers mit unterschiedlicher Rate verwenden, in das DCNN eingebaut. Das Prinzip ist in Abbildung \ref{fig:PyramPooling} dargestellt.\\
+			Durch dieses Vorgehen soll Größeninvarianz erreicht werden.
+			
+				\begin{figure}
+					\centering
+					\includegraphics[width = 0.9\linewidth]{img/PyramPooling.png}
+					\caption{Beispielhaft dargestellte Vorteile von Atrous Convolution}
+					\label{fig:PyramPooling}
+				\end{figure} 
 		\subsection{Fully-Connected Conditional Random Fields}
 		\subsection{Residual Networks}
 	\section{Kamerakalibrierung}
