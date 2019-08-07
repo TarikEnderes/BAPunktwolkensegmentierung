@@ -1,9 +1,78 @@
 \chapter{Experimente}
 	\section{Technische Daten des für die Experimente verwendeten Rechners}
+		\begin{itemize}
+			\item Prozessor: Intel(R) Core(TM) i7-7700HQ CPU @ 2.860GHz
+			\item Grafikkarte: NVIDIA GeForce GTX 1070
+			\item Arbeitsspeicher: 16GB RAM
+		\end{itemize}
 	\section{Backbones}
+		Für die Durchführung folgender Experimente wird der fein annotierte Cityscapes-Datensatz verwendet. Die Netze werden auf dem aus 2975 Bildern bestehenden Trainingssatz trainiert und auf dem 500 Bilder fassenden Validierungssatz ausgewertet.\\
+		Für jede Trainingsepoche werden aus dem Trainingssatz 1487 Bilder zufällig ausgewählt. Als Grundlernrate wird 0.007 gewählt. Der Trainingsfehler wird über die in \cite{Lovasz} beschriebene Lovasz-Funktion berechnet. Weitere Hyperparameter sind eine Dropout-Rate von 0.1,  eine Regularisierungsrate von $4*10^{-5}$ und ein Momentum-Faktor von 0.9.
 		\subsection{Xeption}
 		\subsection{MobileNetV2}
-	\section{Auswirkungen der Trainingsdauer}
+			%\subsubsection{Auswirkungen der Trainingsdauer}
+			\begin{table}[h]
+			
+				\begin{tabular}{lcccccc}
+					Epochen trainiert & 1 & 5 & 10 & 15 & 25 & 30\\\hline
+					IoU Straße & 0.6260 & 0.6498 & 0.6727 & 0.6729 & 0.6774 & 0.6675\\\hline
+					IoU Gehsteig & 0.1835 & 0.3788 & 0.4330 & 0.4616 & 0.5193 & 0.5078\\\hline
+					IoU Gebäude & 0.5563 & 0.6402 & 0.6573 & 0.6771 & 0.6931 & 0.7068\\\hline
+					IoU Mauer & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\\hline
+					IoU Zaun & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\\hline
+					IoU Pfahl & 0.0791 & 0.1931 & 0.2159 & 0.2561 & 0.2835 & 0.2728\\\hline
+					IoU Ampel & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\\hline
+					IoU Verkehrszeichen & 0.0 & 0.1056 & 0.1785 & 0.1859 & 0.2233 & 0.2291\\\hline
+					IoU Vegetation & 0.5581 & 0.7153 & 0.7273 & 0.7518 & 0.7728 & 0.7663\\\hline
+					IoU Gelände & 0.0 & 0.0915 & 0.1274 & 0.1355 & 0.1593 & 0.1445\\\hline
+					IoU Himmel & 0.5353 & 0.6606 & 0.6867 & 0.6977 & 0.7153 & 0.7081\\\hline
+					IoU Person & 0.0 & 0.1160 & 0.1582 & 0.1458 & 0.1680 & 0.1863\\\hline
+					IoU Radfahrer & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\\hline
+					IoU Auto & 0.3537 & 0.5438 & 0.6014 & 0.5863& 0.6419 & 0.6103\\\hline
+					IoU Lastwagen & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\\hline
+					IoU Bus & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\\hline
+					IoU Zug & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\\hline
+					IoU Motorrad & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\\hline
+					IoU Fahrrad & 0.0 & 0.0 & 0.0 & 0.0750 & 0.1340 & 0.1542\\\hline
+					Durchschnitt IoU & 0.1522 & 0.2155 & 0.2346 & 0.2444 & 0.2625 & 0.2607\\\hline
+					Durchschnitt IoU $\neq 0$ & 0.4131 & 0.4094 & 0.4458 & 0.4222 & 0.4534& 0.4503\\\hline
+					
+						
+				\end{tabular}
+				\caption{Bewertung von Netzen in Intersection-over-union (IoU) Metrik in Abhängigkeit der Trainingsdauer des Netzes. Berechnung des IoU durch: IoU = True Positives / (True Positives + False Positives + False Negatives)}
+				\label{lbl: IoUs}
+			\end{table}
+		
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width=15cm]{img/IoUMobilenet.png}
+				\caption{Durchschnittlicher IoU in Abhängigkeit der Anzahl trainierter Epochen}
+				\label{fig:IoUMn}
+			\end{figure} 
+		
+			Wie in Tabelle \ref{lbl: IoUs} und Abbildung \ref{fig:IoUMn} zu erkennen ist, verbessert sich die Bewertung des Netzes bis zu einem Punkt, der in etwa bei Epoche 25 liegt und verschlechtert sich bei Verlängerung der Trainingsdauer wieder. Es tritt also trotz der Regularisierung der Netzparameter und der Nutzung des Dropout-Verfahrens wahrscheinlich Overfitting auf. Die Bewertung des für 25 Epochen trainierten Netzes ist in Abbildung \ref{fig:KIoUMn} dargestellt.\\
+			
+			\begin{figure}
+				\centering
+				\includegraphics[width=15cm]{img/KlasseIoUMobilenet.png}
+				\caption{IoU für jede Klasse vom Test des für 25 Epochen trainierten Netzes}
+				\label{fig:KIoUMn}
+			\end{figure} 
+		
+			Die Netze weisen durchwegs ihre höchsten Ergebnisse beim Erkennen der amorphen Klassen Straße, Gebäude, Vegetatio und Himmel auf, wie bei einem semantischen Segmentierungsverfahren zu erwarten. Das niedrige Ergebnisse bei der Klasse Gelände lässt sich dadurch erklären, dass der Cityscapes-Datensatz in städtischen Umgebungen aufgenommen wird, wo diese Klasse selten auftritt. Vergleichsweise hoch ist auch der IoU-Wert in der Klasse Auto, die in dem Datensatz besonders häufig ist.\\
+			Die niedrigsten positiven IoU-Werte weisen die Ergebnisse bei kleineren, zählbaren Objekten wie Personen, Pfähle, Fahrräder und Verkehrszeichen auf. \\
+			Die in Abbildung \ref{fig:KIoUMn} dargestellten Ergebnisse lassen außerdem erkennen, dass das Netz bestimmte Klassen praktisch nicht erkennt. Dies lässt vermuten, dass das Netz nur eingeschränkt fähig ist, Bildsegmente anhand ihres Kontextes zu bewerten und beispielsweise zwischen einem Fußgänger und einem Fahrradfahrer oder zwischen einer Mauer und einem Gebäude zu unterscheiden und die häufiger auftretende Variante auswählt. Die Ergebnisse der Klasse Fahrrad lassen vermute, dass ein längeres Training dieses Verhalten verbessern könnte. Da ein zu langes Training sich, wie vorher erwähnt, negativ auf den durchschnittlichen IoU auswirkt, wird in diesem Experiment aber davon abgesehen. Eine weitere Möglichkeit wäre, dem Trainingssatz mehr Daten hinzuzufügen, die vermehrt die entsprechenden Objekte enthalten.\\
+			
+			\begin{figure}
+				\centering
+				\includegraphics[width=15cm]{img/BeispielMobilenet.png}
+				\caption{Beispiele für Ausgaben des Netzwerks (25 Epochen trainiert)\\ Von links nach rechts: Eingabebild, Ground Truth, Netzausgabe}
+				\label{fig:BspMn}
+			\end{figure} 
+			
+			\ref{fig:BspMn} zeigt ausgewählte Ausgaben des für 25 Epochen lang trainierten Netzes, das die besten Ergebnisse in der IoU-Metrik liefert. Sie spiegeln die Bewertung in \ref{lbl: IoUs} mit hoher Genauigkeit bei großen und amorphen Objekten und niedriger bei kleineren, zählbaren. Besonders auffällig sind False Positives der Klasse Person, die das Netz oft an Fahrräder oder Bäume in der nähe von Personen vergibt.\\
+			Die Beispiele lassen erkennen, dass das Netz teilweise die Trainingsdaten memorisiert. So wird dem oberen Teil eines Fahrrades häufig die Klasse Person zugewiesen und umgekehrt der untere Teil einer Person als Fahrrad erkannt. Genauso werden Bereiche, die sich über einem als Straße erkannten Segments befinden tendenziell eher als Auto klassifiziert.
+		
 	\section{Experimente mit Verfeinerung}
 		\subsection{Verfeinerung mit KITTI}
 	\section{Aufgetretene Probleme und Lösungen}
