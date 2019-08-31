@@ -1,13 +1,6 @@
 \chapter{Theorie}
-	\section{Segmentierung}
-		Segmentierung bezeichnet einen Vorgang, bei dem ein Bild nach bestimmten Homogenitätskriterien in inhaltlich zusammenhängende Regionen einzuteilen. Von den verschiedenen Ansätzen, die das erreichen sollen, befasst sich diese Arbeit mit pixelbasierten Verfahren, bei denen jedem Pixel in einem Bild eine Klasse zugeordnet wird. Man unterscheidet, wie in \cite{UPSNet} beschrieben, semantische Segmentierung, Instanz-Segmentierung und panoptische Segmentierung.
-		\subsection{Semantische Segmentierung}
-			Bei der Semantischen Segmentierung soll jeder Pixel eine valide Klasse erhalten. Es wird dabei nicht zwischen unterschiedlichen Instanzen einer Objektklasse unterschieden. Wenn beispielsweise auf einem Bild zwei Fahrzeuge zu sehen sind und bei der Segmentierung die Klasse "Fahrzeug" zugeteilt werden soll, erhalten die Pixel beider Fahrzeuge das Label "Fahrzeug". Die Anzahl valider Klassen bleibt somit bei jeden prozessierten Bild gleich.
-		\subsection{Instanz-Segmentierung}
-			Im Gegensatz zur semantischen Segmentierung werden bei der Instanz-Segmentierung nur zählbare Objekte betrachtet und deren Instanzen berücksichtigt. Übertragen auf vorheriges Beispiel würden die Pixel des einen Fahrzeug ein Label wie "Fahrzeug1" und die des anderen analog "Fahrzeug2" erhalten.  
-		\subsection{Panoptische Segmentierung}
-			Die panoptische Segmentierung stellt eine Kombination der vorherigen Segmentations-Arten dar. Zählbare Objekte werden demnach nach dem Prinzip der Instanz-Segmentierung und amorphe nach dem der semantischen Segmentierung segmentiert. Die Ergebnisse beider Verfahren werden anschließend kombiniert.
-	\section{Technologien in DeepLab}
+	
+	\section{DeepLab}
 		DeepLab ist ein von Google entwickeltes, 2015  in \cite{DeepLab1} vorgestelltes Modell für semantische Segmentierung. Bei der in \cite{DeepLab2} vorgestellten Methode wird ein Deep Convolutional Neural Network (DCNN) zum Erzeugen einer Score Map benutzt, die anschließend mit einem Conditional Random Field (CRF) zur endgültigen Ausgabe weiterverarbeitet wird. Das Verfahren wird in Abbildung \ref{fig:DeepLabAblauf} grob dargestellt.
 		
 		\begin{figure}
