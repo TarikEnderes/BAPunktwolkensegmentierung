@@ -168,7 +168,7 @@
                         \fi
                       \textsf{\large \@institute}
                       \end{center}}
-\newcommand{\@thesis}{\ifthenelse{\boolean{en}}{Master's Thesis}{Masterarbeit}}
+\newcommand{\@thesis}{\ifthenelse{\boolean{en}}{Bachelor's Thesis}{Bachelorarbeit}}
 \newcommand{\@dtitle}{\@title}
 \newcommand{\descriptiontitle}[1]{\ifthenelse{\equal{#1}{\empty}}{}{\renewcommand{\@dtitle}{#1}}}
 \newcommand{\@atitle}{\@title}

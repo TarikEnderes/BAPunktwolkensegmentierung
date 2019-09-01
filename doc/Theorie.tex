@@ -11,7 +11,10 @@
 		\end{figure}  
 		\subsection{Deep Convolutional Neural Networks für Semantische Segmentierung}
 			\subsubsection{Convolutional Neural Networks}
-				
+				Wie in \cite{Goodfellow-et-al-2016} beschrieben, handelt es sich bei Convolutional Neural Netzworks (CNNs) um Neuronale Netze, die in mindestens einer Verarbeitungsschicht Faltung an Stelle von Matrixmultiplikation als mathematische Operation durchführen. Der Begriff Faltung bezieht sich dabei nicht auf die streng mathematischen Definition. In der Regel wird eine Variation eingesetzt. Verwendet das Netz ausschließlich Faltung spricht man von einem Fully Convolution Neural Netzwork. CNNs eignen sich zur Anwendung auf rasterförmige Datenstrukturen und werden aufgrund ihrer im Folgenden beschriebenen Eigenschaften häufig zur Bildverarbeitung eingesetzt.\\
+				Ein Vorteil von Faltung gegenüber Matrixmultiplikation ist, dass Größe der Eingabematrix variabel ist. Im Fall von Bildbearbeitung bedeutet das, dass ein Fully Convolution Neural Netzwork Bilder unabhängig von deren Größe und Auflösung verarbeiten kann. Es ist zu beachten, dass damit nicht Größeninvarianz erreicht wird.\\
+				Bei der Faltung einer Matrix mit einem Kernel ist jeder Wert des Ergebnisses nur abhängig von bestimmten Werten der Eingabematrix, nicht unbedingt von allen, wie bei einer Matrixmultiplikation. Für semantische Segmentierung bedeutet das, dass der Ausgabewert für einen Pixel nur von Pixeln in einem begrenzten Bereich des Eingabebildes, dem Sichtfeld, bestimmt wird. Durch Verknüpfung mehrerer Faltungsschichten wird dieses Sichtfeld vergrößert. Außerdem wird jeder Wert der Eingabematrix auf dieselbe Weise verarbeitet. Damit werden die Ergebnisse der Faltungsschichten in einem Netzwerk Equivariant gegenüber Translation. Das bedeutet, wenn die Eingabe verschoben ist, tritt die gleichen Verschiebung in der Ausgabe auf. Die Größe des Faltungskernels kann theoretisch frei gewählt werden und ist im Fall von Bildverarbeitung vernachlässigbar klein verglichen mit den Eingabedaten, was CNNs deutlich effizienter im Bezug auf Laufzeit und besonders Speicherbedarf macht.\\
+				Üblicherweise wird in CNNs eine Pooling genannte Operation eingesetzt. Beim Pooling wird aus einer Matrix eine andere, meistens kleinere erstellt, die eine Zusammenfassung der Originalmatrix darstellt. Es gibt verschiedene Arten von Pooling. Häufig verwendet wird s.g. Max-Pooling, bei dem jeder Eintrag der Ausgabematrix das Maximum eines rechteckigen Bereichs der Eingabematrix ist. Durch Pooling soll das Netz Resistenter gegenüber kleinen Änderungen der Eingabedaten werden und die Größe für weitere Verarbeitungsschichten verringert werden um die Laufzeit zu verbessern. Typischerweise folgt eine Pooling-Schicht auf eine oder mehrere Faltungsschichten. 
 			\subsubsection{Anpassungen für Semantische Segmentierung}
 				Klassische DCNNs haben Eigenschaften, die sie für die Verwendung zur Bildsegmentierung nicht ideal machen. 
 				\begin{itemize}
@@ -54,5 +57,13 @@
 				\end{figure} 
 		\subsection{Fully-Connected Conditional Random Fields}
 		\subsection{Residual Networks}
+			Ein Residual Neural Networks (ResNet) ist ein neuronales Netz, das das in \cite{DBLP:journals/corr/HeZRS15} vorgestellte Residual Learning implementiert. Dabei werden, wie in \ref{fig:ResNet} dargestellt, "`Abkürzungen"' in das Netz eingebaut, über die die Ausgabewerte einer Schicht eine oder mehrere nachfolgende Schichten überspringen und eine tiefere Schicht unverändert erreichen und mit den Ergebnissen der übersprungenen Schichten kombiniert werden.\\
+			\begin{figure}
+				\centering
+				\includegraphics[]{img/ResNet.png}
+				\caption{Prinzip von Residual Learning}
+				\label{fig:ResNet}
+			\end{figure} Mit ResNets wird ein Problem von Deep Neural Networks gelöst, bei dem der Trainingsfehler durch Hinzufügen zusätzlicher Verarbeitungsschichten vergrößert wird.
+			
 	\section{Kamerakalibrierung}
 		
