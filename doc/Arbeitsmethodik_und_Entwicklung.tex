@@ -1,5 +1,9 @@
 \chapter{Arbeitsmethodik und Entwicklung}
 	\section{Integration von DeepLab}
 	\section{Backbones}
+		Die hier verwendete Implementierung von DeepLab unterstützt zwei Backbones: Xception65 und MobileNetV2.
 		\subsection{Xecption}
+			Das in \cite{Xception} präsentierte Xception-Netzwerk ist ein DCNN, das auf der Idee von depthwise separable convolution basiert.Es wird also angenommen, dass Korrelationen, die mehrere Kanäle umfassen von räumlichen Korrelationen entkoppelt werden können. Die einzelnen Module des Netzes verarbeiten zunächst alle Kanäle separat und erzeugen dann auf dieser Basis eine Ausgabe.\\
+			Das vorgestellte Netz hat insgesamt 36 Faltungsschichten, die in 14 Module gegliedert sind, die als ResNet miteinander verbunden sind.
 		\subsection{MobileNetV2}
+	\section{Segmentierung von Punktwolken der KITTI-Daten}

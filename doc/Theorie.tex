@@ -25,7 +25,8 @@
 			
 			Um diese Probleme zu lösen erhält das von DeepLab verwendete DCNN einige Anpassungen. Zunächst werden alle Fully Connected Layers durch Convolutional Layers ersetzt, um ein Fully Convolutional Network zu bilden. 
 			Noch dazu wird anstatt von Pooling Layers in den unteren Schichten Atrous Convolution eingesetzt, womit die Auflösung der Ausgabe erhöht wird. In den höheren Schichten werden auch hier Pooling Layers eingesetzt, um Speicherbedarf und Rechenzeit zu verbessern. 
-			Um die Größeninvarianz zu verbessern wird bei den unteren Schichten Atrous Spatial Pyramid Pooling verwendet.
+			Um die Größeninvarianz zu verbessern wird bei den unteren Schichten Atrous Spatial Pyramid Pooling verwendet. 
+			Um die Ergebnisse, vor allem an den Kanten von Objekten, zu verbessern und Rauschen zu reduzieren wird die Ausgabe des DCNN mit einem Fully Connected CRF weiterverarbeitet.
 			
 		\subsection{Atrous Convolution}
 			Atrous Convolution, auch Dilated Convolution genannt, beschreibt eine Technik bei der eine Matrix mit einem spärlich bestückten Kernel gefaltet wird, wie in Abbildung \ref{fig:AtrousConv} illustriert.
@@ -55,7 +56,10 @@
 					\caption{Beispielhaft dargestellte Vorteile von Atrous Convolution}
 					\label{fig:PyramPooling}
 				\end{figure} 
-		\subsection{Fully-Connected Conditional Random Fields}
+		\subsection{Conditional Random Fields}
+			Ein Conditional Random Field (CRF)  ist ein Modell, das eine Datensequenz erhält und eine Sequenz gleicher Länge und Art ausgibt. CRFs werden zur Segmentierung und zum Labeln genutzt. Das Modell setzt, wie in \cite{CrfIntro} beschrieben, überwachtes Lernen ein, um Parameter für eine Funktion zu bestimmen, die die Verteilung $p(X|Y)$ beschreibt, wobei X und Y Zufallsvariablen sind. X beschreibt die beobachtete Eingabesequenz, Y die zu bestimmende Ausgabesequenz. Idealerweise wird für eine Eingabesequenz x eine Ausgabesequenz y so gewählt, dass $p(y|x)$ nach dem berechneten Random Field $p(X|Y)$ maximal wird. Allerdings wäre das für lange Sequenzen zu aufwändig, weshalb in praktischen Anwendungen andere Optimierungsalgorithmen eingesetzt werden.\\
+			Wird für die Berechnung eines Wertes der Ausgabe alle Einträge der Eingabe betrachtet, spricht man von einem Fully Connected Conditional Random Field.
+			Für weitere Informationen und eine präzise Definition siehe \cite{CRF}.
 		\subsection{Residual Networks}
 			Ein Residual Neural Networks (ResNet) ist ein neuronales Netz, das das in \cite{DBLP:journals/corr/HeZRS15} vorgestellte Residual Learning implementiert. Dabei werden, wie in \ref{fig:ResNet} dargestellt, "`Abkürzungen"' in das Netz eingebaut, über die die Ausgabewerte einer Schicht eine oder mehrere nachfolgende Schichten überspringen und eine tiefere Schicht unverändert erreichen und mit den Ergebnissen der übersprungenen Schichten kombiniert werden.\\
 			\begin{figure}
@@ -66,4 +70,18 @@
 			\end{figure} Mit ResNets wird ein Problem von Deep Neural Networks gelöst, bei dem der Trainingsfehler durch Hinzufügen zusätzlicher Verarbeitungsschichten vergrößert wird.
 			
 	\section{Kamerakalibrierung}
-		
+		Eine Kamera ermöglicht es, ein dreidimensionales Objekt auf eine zweidimensionale Ebene zu projizieren. Diese Projektion kann, wie in \cite{Hartley} beschrieben, mit dem in Abbildung \ref{fig:Proj} dargestellten Modell angenähert werden, in dem von Punkten im dreidimensionalen Raum ein Strahl durch einen bestimmten Fixpunkt, das Projektionszentrum, verläuft und dabei eine vorgegebene Ebene, die Bildebene, schneidet. Der Schnittpunkt dieses Strahls mit der Bildebene entspricht dem projizierten Punkt auf dem entstehenden Bild.\\
+		\begin{figure}
+			\centering
+			\includegraphics[]{img/Projektion.png}
+			\caption{Prinzip einer Lochkamera zur Projektion vom dreidimensionalen in den zweidimensionalen Raum \cite{Fusiello06elementsof}}
+			\label{fig:Proj}
+		\end{figure}
+		Offensichtlich werden alle Punkte im dreidimensionalen Raum, die auf einem Strahl durch das Projektionszentrum liegen, auf denselben Punkt in der Bildebene projiziert. Das Bild lässt sich also praktisch als eine Menge von Strahlen auffassen.\\
+		Ist eine Kamera kalibriert ist es möglich, aus zwei Punkten auf einem damit aufgenommenen Bild den Winkel zwischen den beiden Strahlen zu bestimmen, durch die sie entstanden sind. Analog dazu kann beispielsweise aus dem Bild auf die Größe einer fotografierten Fläche geschlossen werden oder bestimmt werden, ob eine Ellipse auf dem Bild die Projektion eines Kreises ist. Um solche Berechnungen anzustellen sind zusätzliche Informationen notwendig, da bei der Kameraprojektion Informationen über Entfernungen, Längen, Winkel, Verhältnisse und dementsprechend Formen nicht erhalten bleiben.\\
+		Dass eine Kamera kalibriert ist, bedeutet im Praktischen Sinn, dass eine Matrix P bekannt ist, für die gilt:
+		\begin{math}
+			m = PM.
+		\end{math}
+		M bezeichnet dabei die homogenen Koordinaten eines Punktes im dreidimensionalen Raum und m diejenigen von dessen Projektion auf der Bildebene. Für weitere Informationen über homogene Koordinaten siehe \cite{Hartley}.\\
+		Kenntnis über die so genannte Projektions- oder Kameramatrix P ermöglicht also die Berechnung der zum Projektionszentrum relativen Koordinaten des projizierten Punktes aus denen des aufgenommenen Punktes und umgekehrt. Offensichtlich kann damit berechnet werden, wo ein mit einer kalibrierten Kamera aufgenommener Punkt im Bild einer anderen erscheint.
