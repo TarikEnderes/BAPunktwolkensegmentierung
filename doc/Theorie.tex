@@ -9,13 +9,12 @@
 			\caption{Grundsätzliche Funktionsweise von DeepLab}
 			\label{fig:DeepLabAblauf}
 		\end{figure}  
-		\subsection{Deep Convolutional Neural Networks für Semantische Segmentierung}
-			\subsubsection{Convolutional Neural Networks}
+			\subsection{Convolutional Neural Networks}
 				Wie in \cite{Goodfellow-et-al-2016} beschrieben, handelt es sich bei Convolutional Neural Netzworks (CNNs) um Neuronale Netze, die in mindestens einer Verarbeitungsschicht Faltung an Stelle von Matrixmultiplikation als mathematische Operation durchführen. Der Begriff Faltung bezieht sich dabei nicht auf die streng mathematischen Definition. In der Regel wird eine Variation eingesetzt. Verwendet das Netz ausschließlich Faltung spricht man von einem Fully Convolution Neural Netzwork. CNNs eignen sich zur Anwendung auf rasterförmige Datenstrukturen und werden aufgrund ihrer im Folgenden beschriebenen Eigenschaften häufig zur Bildverarbeitung eingesetzt.\\
 				Ein Vorteil von Faltung gegenüber Matrixmultiplikation ist, dass Größe der Eingabematrix variabel ist. Im Fall von Bildbearbeitung bedeutet das, dass ein Fully Convolution Neural Netzwork Bilder unabhängig von deren Größe und Auflösung verarbeiten kann. Es ist zu beachten, dass damit nicht Größeninvarianz erreicht wird.\\
 				Bei der Faltung einer Matrix mit einem Kernel ist jeder Wert des Ergebnisses nur abhängig von bestimmten Werten der Eingabematrix, nicht unbedingt von allen, wie bei einer Matrixmultiplikation. Für semantische Segmentierung bedeutet das, dass der Ausgabewert für einen Pixel nur von Pixeln in einem begrenzten Bereich des Eingabebildes, dem Sichtfeld, bestimmt wird. Durch Verknüpfung mehrerer Faltungsschichten wird dieses Sichtfeld vergrößert. Außerdem wird jeder Wert der Eingabematrix auf dieselbe Weise verarbeitet. Damit werden die Ergebnisse der Faltungsschichten in einem Netzwerk Equivariant gegenüber Translation. Das bedeutet, wenn die Eingabe verschoben ist, tritt die gleichen Verschiebung in der Ausgabe auf. Die Größe des Faltungskernels kann theoretisch frei gewählt werden und ist im Fall von Bildverarbeitung vernachlässigbar klein verglichen mit den Eingabedaten, was CNNs deutlich effizienter im Bezug auf Laufzeit und besonders Speicherbedarf macht.\\
-				Üblicherweise wird in CNNs eine Pooling genannte Operation eingesetzt. Beim Pooling wird aus einer Matrix eine andere, meistens kleinere erstellt, die eine Zusammenfassung der Originalmatrix darstellt. Es gibt verschiedene Arten von Pooling. Häufig verwendet wird s.g. Max-Pooling, bei dem jeder Eintrag der Ausgabematrix das Maximum eines rechteckigen Bereichs der Eingabematrix ist. Durch Pooling soll das Netz Resistenter gegenüber kleinen Änderungen der Eingabedaten werden und die Größe für weitere Verarbeitungsschichten verringert werden um die Laufzeit zu verbessern. Typischerweise folgt eine Pooling-Schicht auf eine oder mehrere Faltungsschichten. 
-			\subsubsection{Anpassungen für Semantische Segmentierung}
+				Üblicherweise wird in CNNs eine Pooling genannte Operation eingesetzt. Beim Pooling wird aus einer Matrix eine andere, meistens kleinere erstellt, die eine Zusammenfassung der Originalmatrix darstellt. Es gibt verschiedene Arten von Pooling. Häufig verwendet wird so genanntes Max-Pooling, bei dem jeder Eintrag der Ausgabematrix das Maximum eines rechteckigen Bereichs der Eingabematrix ist. Durch Pooling soll das Netz Resistenter gegenüber kleinen Änderungen der Eingabedaten werden und die Größe für weitere Verarbeitungsschichten verringert werden um die Laufzeit zu verbessern. Typischerweise folgt eine Pooling-Schicht auf eine oder mehrere Faltungsschichten. 
+			\subsection{Anpassungen für Semantische Segmentierung}
 				Klassische DCNNs haben Eigenschaften, die sie für die Verwendung zur Bildsegmentierung nicht ideal machen. 
 				\begin{itemize}
 					\item Der Einsatz von Downsampling führt zu verringerter Auflösung, die bei Klassifizierungsaufgaben nicht ins Gewicht fällt, für die Segmentierung aber essentiell ist. 
@@ -25,8 +24,8 @@
 			
 			Um diese Probleme zu lösen erhält das von DeepLab verwendete DCNN einige Anpassungen. Zunächst werden alle Fully Connected Layers durch Convolutional Layers ersetzt, um ein Fully Convolutional Network zu bilden. 
 			Noch dazu wird anstatt von Pooling Layers in den unteren Schichten Atrous Convolution eingesetzt, womit die Auflösung der Ausgabe erhöht wird. In den höheren Schichten werden auch hier Pooling Layers eingesetzt, um Speicherbedarf und Rechenzeit zu verbessern. 
-			Um die Größeninvarianz zu verbessern wird bei den unteren Schichten Atrous Spatial Pyramid Pooling verwendet. 
-			Um die Ergebnisse, vor allem an den Kanten von Objekten, zu verbessern und Rauschen zu reduzieren wird die Ausgabe des DCNN mit einem Fully Connected CRF weiterverarbeitet.
+			Um Größeninvarianz zu erreichen wird bei den unteren Schichten Atrous Spatial Pyramid Pooling verwendet. 
+			Um die Ergebnisse, vor allem an den Kanten von Objekten zu verbessern und Rauschen zu reduzieren wird die Ausgabe des DCNN mit einem Fully Connected CRF weiterverarbeitet.
 			
 		\subsection{Atrous Convolution}
 			Atrous Convolution, auch Dilated Convolution genannt, beschreibt eine Technik bei der eine Matrix mit einem spärlich bestückten Kernel gefaltet wird, wie in Abbildung \ref{fig:AtrousConv} illustriert.
@@ -37,7 +36,7 @@
 					\caption{Prinzip von Atrous Convolution}
 					\label{fig:AtrousConv}
 				\end{figure} 
-			Die Abstände der zu berücksichtigenden Werte in der Matrix wird dabei durch die s.g. Dilation Rate bzw. Erweiterungsrate (kurz Rate) festgelegt. Das Tatsächliche Sichtfeld des Filters wird also festgelegt durch die Größe des Kernels und die Rate bestimmt.\\ ein Filter mit einem Kernel der Größe 3x3 und einer Rate von 2, was dem Einfügen einer leeren Zeilen und Spalte zwischen den Werten entspricht, hat demnach ein Sichtfeld der Größe 5x5.
+			Die Abstände der zu berücksichtigenden Werte in der Matrix wird dabei durch die so genannte Dilation Rate bzw. Erweiterungsrate (kurz Rate) festgelegt. Das Tatsächliche Sichtfeld des Filters wird also festgelegt durch die Größe des Kernels und die Rate bestimmt.\\ ein Filter mit einem Kernel der Größe 3x3 und einer Rate von 2, was dem Einfügen einer leeren Zeilen und Spalte zwischen den Werten entspricht, hat demnach ein Sichtfeld der Größe 5x5.
 			Dadurch wird das effektive Sichtfeld des Filters erhöht und es kann eine höhere Auflösung bei gleichen Rechenaufwand erreicht werden. Die Vorteile der Verwendung von Atrous Convolution für Bildsegmentierung sind in Abbildung \ref{fig:AtrousConvRes} dargestellt.
 				\begin{figure}
 					\centering
@@ -47,7 +46,7 @@
 				\end{figure} 
 		
 		\subsection{Atrous Spatial Pyramid Pooling}
-			Beim Atrous Spatial Pyramid Pooling werden mehrere parallele Convolutional Layers, die Atrous Convolutional Layers mit unterschiedlicher Rate verwenden, in das DCNN eingebaut. Das Prinzip ist in Abbildung \ref{fig:PyramPooling} dargestellt.\\
+			Beim Atrous Spatial Pyramid Pooling werden mehrere parallele Convolutional Layers, die Atrous Convolutional Layers mit unterschiedlicher Rate verwenden, in das DCNN eingebaut. Aus den Ergebnissen der Verarbeitungszweige wird ein Tensor gebildet, der anschließend einer Dimension-übergreifenden 1x1 Faltung unterzogen wird, um die endgültigen Wahrscheinlichkeiten zu berechnen. Das Prinzip ist in Abbildung \ref{fig:PyramPooling} dargestellt.\\
 			Durch dieses Vorgehen soll Größeninvarianz erreicht werden.
 			
 				\begin{figure}
@@ -61,13 +60,13 @@
 			Wird für die Berechnung eines Wertes der Ausgabe alle Einträge der Eingabe betrachtet, spricht man von einem Fully Connected Conditional Random Field.
 			Für weitere Informationen und eine präzise Definition siehe \cite{CRF}.
 		\subsection{Residual Networks}
-			Ein Residual Neural Networks (ResNet) ist ein neuronales Netz, das das in \cite{DBLP:journals/corr/HeZRS15} vorgestellte Residual Learning implementiert. Dabei werden, wie in \ref{fig:ResNet} dargestellt, "`Abkürzungen"' in das Netz eingebaut, über die die Ausgabewerte einer Schicht eine oder mehrere nachfolgende Schichten überspringen und eine tiefere Schicht unverändert erreichen und mit den Ergebnissen der übersprungenen Schichten kombiniert werden.\\
+			Ein Residual Neural Networks (ResNet) ist ein neuronales Netz, das das in \cite{DBLP:journals/corr/HeZRS15} vorgestellte Residual Learning implementiert. Dabei werden, wie in \ref{fig:ResNet} dargestellt, "`Abkürzungen"' in das Netz eingebaut, über die die Ausgabewerte einer Schicht eine oder mehrere nachfolgende Schichten überspringen und eine tiefere Schicht unverändert erreichen und mit den Ergebnissen der übersprungenen Schichten addiert werden.\\
 			\begin{figure}
 				\centering
 				\includegraphics[]{img/ResNet.png}
 				\caption{Prinzip von Residual Learning}
 				\label{fig:ResNet}
-			\end{figure} Mit ResNets wird ein Problem von Deep Neural Networks gelöst, bei dem der Trainingsfehler durch Hinzufügen zusätzlicher Verarbeitungsschichten vergrößert wird.
+			\end{figure} Mit ResNets wird ein Problem von Deep Neural Networks gelöst, bei dem der Trainingsfehler durch Hinzufügen zusätzlicher Verarbeitungsschichten vergrößert wird. Die Überlegung dabei ist, dass weitere Schichten die Resultate nicht verschlechtern können, wenn die Ausgabe vorheriger Schichten noch unverändert vorhanden ist. Experimente bestätigen diese These. Residual Learning ist heute ein gebräuchliches Mittel beim Einsatz von vielschichtigen Netzwerken.
 			
 	\section{Kamerakalibrierung}
 		Eine Kamera ermöglicht es, ein dreidimensionales Objekt auf eine zweidimensionale Ebene zu projizieren. Diese Projektion kann, wie in \cite{Hartley} beschrieben, mit dem in Abbildung \ref{fig:Proj} dargestellten Modell angenähert werden, in dem von Punkten im dreidimensionalen Raum ein Strahl durch einen bestimmten Fixpunkt, das Projektionszentrum, verläuft und dabei eine vorgegebene Ebene, die Bildebene, schneidet. Der Schnittpunkt dieses Strahls mit der Bildebene entspricht dem projizierten Punkt auf dem entstehenden Bild.\\
