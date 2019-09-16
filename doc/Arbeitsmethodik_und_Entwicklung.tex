@@ -43,5 +43,10 @@
 			
 	\section{Segmentierung von Punktwolken der KITTI-Daten}
 		Der KITTI-Datensatz bietet sowohl Aufnahmen von kalibrierten Farbkameras mit der Projektionsmatrix als auch Laserscans in Form von Punktwolken im Velodyne-Format und eine, wenn auch verhältnismäßig geringe, Menge an fein-annotierten Bildern für semantische Segmentierung. Das macht ihn zu einer logischen Wahl für die Generierung von Beispielergebnissen in diesem Projekt.\\
-		Für die Implementierung bietet sich das für KITTI entwickelte Python-Modul Pykitti an, das Funktionen zur Verwaltung der Bild- und Velodyne-Daten und zum Umrechnen der Koordinaten anhand der Projektionsmatrizen anbietet. Das macht es einfach, die mit DeepLab gewonnen Labels auf die Punktwolken zu projizieren. Zu beachten ist, dass dabei nur Punkte beachtet werden können, die sich im Sichtfeld des Bildes befinden. Für die Visualisierung der Ergebnisse wird eine Python-Integration von Mayavi verwendet. 
-		
+		Für die Implementierung bietet sich das für KITTI entwickelte Python-Modul Pykitti an, das Funktionen zur Verwaltung der Bild- und Velodyne-Daten und zum Umrechnen der Koordinaten anhand der Projektionsmatrizen anbietet. Das macht es einfach, die mit DeepLab gewonnen Labels auf die Punktwolken zu projizieren. Zu beachten ist, dass dabei nur Punkte beachtet werden können, die sich im Sichtfeld des Bildes befinden. Für die Visualisierung der Ergebnisse wird eine Python-Integration von Mayavi verwendet. Abbildung \ref{fig:BspPW} zeigt ein Beispiel.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=15cm]{img/BeispielPWSegmentierung.png}
+			\caption{Beispiel für segmentierte Punktwolke (von oben nach unten: Originalbild, Ergebnis von DeepLab, segmentierte Punktwolke aus verschiedenen Perspektiven)}
+			\label{fig:BspPW}
+		\end{figure}

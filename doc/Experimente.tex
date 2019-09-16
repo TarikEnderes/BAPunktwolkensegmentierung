@@ -7,10 +7,15 @@
 		\end{itemize}
 	\section{Backbones}
 		Für die Durchführung folgender Experimente wird der fein annotierte Cityscapes-Datensatz verwendet. Die Netze werden auf dem aus 2975 Bildern bestehenden Trainingssatz trainiert und auf dem 500 Bilder fassenden Validierungssatz ausgewertet.\\
-		Für jede Trainingsepoche werden aus dem Trainingssatz 1487 Bilder zufällig ausgewählt. Als Grundlernrate wird 0.007 gewählt. Der Trainingsfehler wird über die in \cite{Lovasz} beschriebene Lovasz-Funktion berechnet. Weitere Hyperparameter sind eine Dropout-Rate von 0.1,  eine L2 Regularisierungsrate von $4*10^{-5}$ und ein Momentum-Faktor von 0.9.
+		Für jede Trainingsepoche werden aus dem Trainingssatz 1487 Bilder zufällig ausgewählt. Als Grundlernrate wird 0.007 gewählt. Der Trainingsfehler wird über die in \cite{Lovasz} beschriebene Lovasz-Funktion berechnet. Weitere Hyperparameter sind eine Dropout-Rate von 0.1,  eine L2 Regularisierungsrate von $4*10^{-5}$ und ein Momentum-Faktor von 0.9.\\
+		Die Netzwerkausgaben werden mittels der im Bereich Bildsegmentierung üblichen Intersection-over-union-Metrik (IoU) ausgewertet, die sich folgendermaßen berechnet:\\
+		\begin{equation}
+			IoU = \frac{TP}{TP + FP + FN}
+		\end{equation}
+		Dabei steht TP für True Positives, also richtig erkannte Pixel, FP für False Positives und FN für False Negatives. Da in diesem System jedem  Pixel eine gültige Klasse zugeordnet wird, sind FP und FN hier stets identisch.
 		
 		\subsection{MobileNetV2}
-			Da Echtzeitfähigkeit eine wichtige Rolle spielt, konzentrieren sich die Experimente auf das leichtgewichtige MobileNetV2, statt dem leistungsfähigeren Xception65.
+			Da Echtzeitfähigkeit eine wichtige Rolle spielt, konzentrieren sich die Experimente auf das leichtgewichtige MobileNetV2, statt dem leistungsfähigeren Xception65. Das erste Experiment beschäftigt sich mit dem Finden der idealen Trainingsdauer.
 			%\subsubsection{Auswirkungen der Trainingsdauer}
 			\begin{table}[h]
 			
@@ -40,7 +45,7 @@
 					
 						
 				\end{tabular}
-				\caption{Bewertung von Models in Intersection-over-union (IoU) Metrik in Abhängigkeit der Trainingsdauer. Berechnung des IoU durch: IoU = True Positives / (True Positives + False Positives + False Negatives)}
+				\caption{Bewertung von Models in Intersection-over-union (IoU) Metrik in Abhängigkeit der Trainingsdauer}
 				\label{lbl: IoUs}
 			\end{table}
 		
@@ -51,7 +56,7 @@
 				\label{fig:IoUMn}
 			\end{figure} 
 		
-			Wie in Tabelle \ref{lbl: IoUs} und Abbildung \ref{fig:IoUMn} zu erkennen ist, verbessert sich die Bewertung des Models bis zu einem Punkt, der in etwa bei Epoche 25 liegt und verschlechtert sich bei Verlängerung der Trainingsdauer wieder. Es tritt also trotz der L2 Regularisierung der Netzparameter und der Nutzung des Dropout-Verfahrens wahrscheinlich Overfitting auf. Im Folgenden wird das für 25 Epochen trainierte Netz verwendet. Die Bewertung dieses ist in Abbildung \ref{fig:KIoUMn} dargestellt.\\
+			Wie in Tabelle \ref{lbl: IoUs} und Abbildung \ref{fig:IoUMn} zu erkennen ist, verbessert sich die Bewertung des Models bis zu einem Punkt, der in etwa bei Epoche 25 liegt und verschlechtert sich bei Verlängerung der Trainingsdauer wieder. Es tritt also trotz der L2 Regularisierung der Netzparameter und der Nutzung des Dropout-Verfahrens wahrscheinlich Overfitting auf. Im Folgenden wird das für 25 Epochen trainierte Netz verwendet. Die Bewertung dieses Models ist in Abbildung \ref{fig:KIoUMn} dargestellt.\\
 			
 			\begin{figure}
 				\centering
@@ -60,7 +65,7 @@
 				\label{fig:KIoUMn}
 			\end{figure} 
 		
-			Die Models weisen durchwegs ihre höchsten Ergebnisse beim Erkennen der amorphen Klassen Straße, Gebäude, Vegetatio und Himmel auf, wie bei einem semantischen Segmentierungsverfahren zu erwarten. Das niedrige Ergebnisse bei der Klasse Gelände lässt sich dadurch erklären, dass der Cityscapes-Datensatz in städtischen Umgebungen aufgenommen wird, wo diese Klasse selten auftritt. Vergleichsweise hoch ist auch der IoU-Wert in der Klasse Auto, die in dem Datensatz besonders häufig ist.\\
+			Die Models weisen durchwegs ihre höchsten Ergebnisse beim Erkennen der amorphen Klassen Straße, Gebäude, Vegetatio und Himmel auf, wie bei einem semantischen Segmentierungsverfahren zu erwarten. Das niedrige Ergebnisse bei der Klasse Gelände lässt sich dadurch erklären, dass der Cityscapes-Datensatz in städtischen Umgebungen aufgenommen wird, wo diese Klasse selten auftritt. Vergleichsweise hoch ist auch der IoU-Wert für die Klasse Auto, die in dem Datensatz besonders häufig ist.\\
 			Die niedrigsten positiven IoU-Werte weisen die Ergebnisse bei kleineren, zählbaren Objekten wie Personen, Pfähle, Fahrräder und Verkehrszeichen auf. \\
 			Die in Abbildung \ref{fig:KIoUMn} dargestellten Ergebnisse lassen außerdem erkennen, dass das Netz bestimmte Klassen praktisch nicht erkennt. Dies lässt vermuten, dass es nur eingeschränkt fähig ist, Bildsegmente anhand ihres Kontextes zu bewerten und beispielsweise zwischen einem Fußgänger und einem Fahrradfahrer oder zwischen einer Mauer und einem Gebäude zu unterscheiden und die häufiger auftretende Variante auswählt. Die Ergebnisse der Klasse Fahrrad lassen vermute, dass ein längeres Training dieses Verhalten verbessern könnte. Da ein zu langes Training sich, wie vorher erwähnt, negativ auf den durchschnittlichen IoU auswirkt, wird in diesem Experiment aber davon abgesehen. Eine weitere Möglichkeit wäre, dem Trainingssatz mehr Daten hinzuzufügen, die vermehrt die entsprechenden Objekte enthalten.\\
 			
@@ -71,8 +76,8 @@
 				\label{fig:BspMn}
 			\end{figure} 
 			
-			\ref{fig:BspMn} zeigt ausgewählte Ausgaben des für 25 Epochen lang trainierten Netzes, das die besten Ergebnisse in der IoU-Metrik liefert. Sie spiegeln die Bewertung in \ref{lbl: IoUs} mit hoher Genauigkeit bei großen und amorphen Objekten und niedriger bei kleineren, zählbaren. Besonders auffällig sind False Positives der Klasse Person, die das Model oft an Fahrräder oder Bäume in der nähe von Personen vergibt.\\
-			Die Beispiele lassen erkennen, dass das Netz teilweise die Trainingsdaten memorisiert. So wird dem oberen Teil eines Fahrrades häufig die Klasse Person zugewiesen und umgekehrt der untere Teil einer Person als Fahrrad erkannt. Genauso werden Bereiche, die sich über einem als Straße erkannten Segments befinden tendenziell eher als Auto klassifiziert.
+			Abbildung \ref{fig:BspMn} zeigt ausgewählte Ausgaben des für 25 Epochen lang trainierten Netzes, das die besten Ergebnisse in der IoU-Metrik liefert. Sie spiegeln die Bewertung aus Tabelle \ref{lbl: IoUs} wieder, mit hoher Genauigkeit bei großen und amorphen Objekten und niedriger bei kleineren, zählbaren. Besonders auffällig sind False Positives der Klasse Person, die das Model oft an Fahrräder oder Bäume in der nähe von Personen vergibt.\\
+			Die Beispiele lassen erkennen, dass das Netz teilweise die Trainingsdaten memorisiert. So wird dem oberen Teil eines Fahrrades häufig die Klasse Person zugewiesen und umgekehrt der untere Teil einer Person als Fahrrad erkannt. Genauso werden Bereiche, die sich über einem als Straße erkannten Segments befinden tendenziell eher als Auto klassifiziert. Das lässt sich auf die Funktion des CRF zurückführen.
 		
 	\subsection{Xeption65}
 		Wir betrachten den Xception65-Backbone im Vergleich zu MobileNetV2. Auf ein Experiment mit unterschiedlichen Trainingsepochen wird an dieser Stelle aufgrund der langen Trainingsdauer der Netze verzichtet. Das verwendete Model ist 60 Epochen lang trainiert mit denselben Hyperparametern wie die Models mit MobileNetV2.
@@ -117,7 +122,7 @@
 		\end{figure} 
 		
 		Wie in Tabelle \ref{lbl: XcVsMn} und Abbildung \ref{fig:XcVsMn} zu sehen ist, erzeugt das Model mit Xception65 durchwegs bessere Ergebnisse als das mit MobileNetV2, benötigt aber im Durchschnitt 97\% mehr Zeit für die Verarbeitung eines Eingabebildes.\\
-		Durch die Verwendung von Xception65 ist das Model außerdem in der Lage, alle Klassen des Datensatzes zu erkennen, auch wenn die IoU-Werte für die von MobileNetV2 nicht erkannten Klassen vergleichsweise niedrig sind. Eine besonders große Steigerung der Bewertung im Vergleich mit MobileNetV2 weist das Netz bei kleineren, zählbaren Objekten auf wie Personen (311\%) und Verkehrszeichen (295\%).\\
+		Durch die Verwendung von Xception65 ist das Model außerdem in der Lage, alle Klassen des Datensatzes zu erkennen, auch wenn die IoU-Werte für die von MobileNetV2 nicht erkannten Klassen vergleichsweise niedrig sind. Eine besonders große Steigerung der Bewertung im Vergleich mit MobileNetV2 weist das Netz bei kleineren, zählbaren Objekten auf wie Personen (311\%) und Verkehrszeichen (295\%) auf.\\
 		Abbildung \ref{fig:BspXc} zeigt beispielhafte Ergebnisse des Models aus dem Validierungs-Datensatz von Cityscapes.
 		
 		\begin{figure}[h]
@@ -139,10 +144,11 @@
 			\label{fig:Verf}
 		\end{figure} 
 		Wie man sieht, tritt bei den Ergebnissen auf dem KITTI-Datensatz bereits nach einer Epoche Verfeinerung mit KITTI-Daten eine deutliche Verbesserung auf. Weitere Trainingsepochen verbessern die Ergebnisse weiter, aber weniger erheblich. Gleichzeitig verschlechtert sich die Ausgabe für ein Bild aus dem Cityscapes-Datensatz in ähnlichem Maße. \\Das unterste Bild von Abbildung \ref{fig:Verf} zeigt die Ausgabe eines Models, das für 25 Epochen auf Cityscapes-Daten trainiert, für 5 Epochen mit KITTI-Daten verfeinert und anschließend für eine Epoche mit Cityscapes-Daten nachtrainiert ist. Wie man sieht, führt die Verfeinerung mit dem ursprünglichen Datensatz wieder zu einer Verschlechterung der Ergebnisse auf KITTI-Bildern und einer Verbesserung auf Cityscapes-Bildern.\\
+		Diese Beobachtungen bestärken die Vermutung, dass beim Trainieren des Netzes Overfitting auftritt.
 	\section{Aufgetretene Probleme und Lösungen}
 		\subsection{False Positives}
 			Models, die MobileNetV2 benutzen neigen dazu, einige Klassen zum Großteil mit einer anderen zu klassifizieren. Beispiele dafür sind die bereits angesprochene Erkennung von Fahrrädern als Personen und die Klassifizierung großer Fahrzeuge als Gebäude. \\
-			Bei Verwendung des Xception65-Backbones kommt es reproduzierbar bei bestimmten Bildern zu einem Phänomen, bei dem eine große Anzahl Pixel nahe einer der Ecken als Straße klassifiziert wird. Es besteht kein erkennbarer Zusammenhang zwischen den Bildern, bei denen dieses Verhalten auftritt. Abbildung \ref{fig:BspBadXc} zeigt Beispiele dafür.
+			Bei Verwendung des Xception65-Backbones kommt es reproduzierbar bei bestimmten Bildern zu einem Phänomen, bei dem eine große Anzahl Pixel nahe einer der Ecken als Straße beziehungsweise die Klasse mit dem niederwertigsten Label klassifiziert wird. Es besteht kein erkennbarer Zusammenhang zwischen den Bildern, bei denen dieses Verhalten auftritt. Abbildung \ref{fig:BspBadXc} zeigt Beispiele dafür.
 			\begin{figure}
 				\centering
 				\includegraphics[width=15cm]{img/BeispielBadXception.png}
