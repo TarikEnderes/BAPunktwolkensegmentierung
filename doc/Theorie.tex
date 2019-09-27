@@ -12,7 +12,7 @@
 		\begin{figure}
 			\centering
 			\includegraphics[width=15cm]{img/AtrousConv.png}
-			\caption{Prinzip von Atrous Convolution}
+			\caption{Prinzip von Atrous Convolution. Das Vorgehen bei der Faltung ist beispielhaft bei einer Erweiterungsrate von zwei dargestellt. Der Wert an der eingefärbten Stelle der Ausgabematrix (rechts) hängt von denen an den eingefärbten Stellen der Eingabematrix (links) ab, statt, wie bei einer herkömmlichen zweidimensionalen Faltung, von benachbarten. Die roten Strahlen markieren die Ecken des Sichtfelds.}
 			\label{fig:AtrousConv}
 		\end{figure} 
 		Die Abstände der zu berücksichtigenden Werte in der Matrix wird dabei durch die so genannte Dilation Rate bzw. Erweiterungsrate festgelegt. Das Tatsächliche Sichtfeld des Filters wird also durch die Größe des Kernels und die Rate bestimmt.\\ ein Filter mit einem Kernel der Größe 3x3 und einer Rate von 2, was dem Einfügen einer leeren Zeilen und Spalte zwischen den Werten entspricht, hat demnach ein Sichtfeld der Größe 5x5.
@@ -20,7 +20,7 @@
 	\begin{figure}
 		\centering
 		\includegraphics[width = 0.9\linewidth]{img/AtrousConvRes.png}
-		\caption{Beispielhaft dargestellte Vorteile von Atrous Convolution}
+		\caption{Beispielhaft dargestellte Vorteile von Atrous Convolution nach \cite{DeepLab2}. In der oberen Reihe ist das übliche Vorgehen bei CNNs dargestellt, in dem durch Down- und Upsampling die Effizienz verbessert wird. Der Vorgang entspricht einer Faltung mit erhöhter Schrittgröße. Unten dargestellt ist die Anwendung von Atrous Convolution mit einer Schrittgröße von eins und Erweiterungsrate zwei. Ein Vergleich der Ergebnisse der beiden Algorithmen zeigt, dass die Ausgabe von Atrous Convolution eine höhere Auflösung aufweist.}
 		\label{fig:AtrousConvRes}
 	\end{figure} 
 	
@@ -31,11 +31,19 @@
 		\begin{figure}
 			\centering
 			\includegraphics[width = 12cm]{img/PyramPooling.png}
-			\caption{Beispielhaft dargestellte Vorteile von Atrous Convolution}
+			\caption{Prinzip von Atrous Spatial Pyramid Pooling wie in \cite{DeepLab2}. Die Eingabe wird mit verschiedenen Filtern mit unterschiedlicher Erweiterungsrate gefaltet, was dazu führt, dass die Stellen in den Ausgabematrizen verschieden große Sichtfelder aufweisen. Die so entstandene Ergebnisse werden zu einer Feature Map kombiniert.}
 			\label{fig:PyramPooling}
 		\end{figure} 
 	\section{Conditional Random Fields}
-		Ein Conditional Random Field (CRF)  ist ein Modell, das eine Datensequenz erhält und eine Sequenz gleicher Länge und Art ausgibt. CRFs werden zur Segmentierung und zum Labeln genutzt. Das Modell setzt, wie in \cite{CrfIntro} beschrieben, überwachtes Lernen ein, um Parameter für eine Funktion zu bestimmen, die die Verteilung $p(X|Y)$ beschreibt, wobei X und Y Zufallsvariablen sind. X beschreibt die beobachtete Eingabesequenz, Y die zu bestimmende Ausgabesequenz. Idealerweise wird für eine Eingabesequenz x eine Ausgabesequenz y so gewählt, dass $p(y|x)$ nach dem berechneten Random Field $p(X|Y)$ maximal wird. Allerdings wäre das für lange Sequenzen zu aufwändig, weshalb in praktischen Anwendungen andere Optimierungsalgorithmen eingesetzt werden.\\
+		Ein Conditional Random Field (CRF)  ist ein Modell, das eine Datensequenz erhält und eine Sequenz gleicher Länge und Art ausgibt. CRFs werden zur Segmentierung und zum Labeln genutzt. Das Modell setzt, wie in \cite{CrfIntro} und \cite{McCallum:2002:EIF:2100584.2100633} beschrieben, überwachtes Lernen ein, um Parameter für eine Distribution zu bestimmen, die die Verteilung $d(X|Y)$ beschreibt, wobei $X$ und $Y$ Zufallsvariablen sind. $X$ beschreibt die beobachtete Eingabesequenz, $Y$ die zu bestimmende Ausgabesequenz.\\
+		Man betrachte eine Familie von Distributionen $p(z)$ und eine Menge von Feature-Funktionen $\phi_1,...,\phi_N$, die alle Daten ausdrücken, die in dem Modell berücksichtigt werden sollen. Es soll nun eine Sammlung von Parametern $\omega$ gefunden werden, sodass durch $p(y|x,\omega)$ die reale Verteilung $d(y|x)$ möglichst gut angenähert wird. $p$ soll dabei so gewählt werden, dass dessen Entropie $H(p)$ maximal ist. Modelliert man, was in der Regel der Fall ist, $p$ als Markov-Kette erster Ordnung, heißt, man nimmt an, dass vergangene Zustände den Ausgangszustand nicht beeinflussen, hat die Distribution mit maximaler Entropie die Form:
+		\begin{equation}
+			p(z) = \frac{1}{Z}\exp(\sum_{i}\omega_i\phi_i(z))
+		\end{equation}
+		mit einem festen Normalisierungsfaktor $Z$.
+		\\
+		Idealerweise wird für eine Eingabesequenz $x$ eine Ausgabesequenz $y$ so gewählt, dass $p(y|x)$ nach dem berechneten Random Field $p(X|Y)$ maximal wird. Eine naheliegende Möglichkeit ist das "`Ausprobieren"' aller möglichen $y$.Allerdings wäre das für lange Sequenzen zu aufwändig, weshalb in praktischen Anwendungen andere Optimierungsalgorithmen eingesetzt werden. Modelliert man, wie zuvor, $p$ als Markov-Kette, ist eine effiziente Berechnung auf Grundlage des Viterbi-Algorithmus \cite{Ryan:1993:VA:901051} möglich.\\
+		Der Lernprozess für CRFs beruht auf Gradient Descend. Da die Wahrscheinlichkeitsfunktion bei eindeutigen Trainingsdaten wegen der Eigenschaften der Exponentialfunktion konvex ist, ist ein lokales Minimum dabei garantiert ein globales. Das Berechnen des Gradienten ist allerdings nicht-trivial und ineffizient, weshalb auf iterative und stochastische Lernalgorithmen, wie das Newtonverfahren zurückgegriffen wird.
 		Wird für die Berechnung eines Wertes der Ausgabe alle Einträge der Eingabe betrachtet, spricht man von einem Fully Connected Conditional Random Field.
 		Für weitere Informationen und eine präzise Definition siehe \cite{CRF}.
 		\begin{figure}
@@ -50,25 +58,83 @@
 		\begin{figure}
 			\centering
 			\includegraphics[width=7cm]{img/ResNet.png}
-			\caption{Prinzip von Residual Learning}
+			\caption{Prinzip von Residual Learning nach \cite{DBLP:journals/corr/HeZRS15}. Über spezielle Abkürzungs-Schichten werden Daten unverändert in weiter darunter liegende Schichten geleitet und auf deren Ausgabe addiert.}
 			\label{fig:ResNet}
-		\end{figure} Mit ResNets wird ein Problem von Deep Neural Networks gelöst, bei dem der Trainingsfehler durch Hinzufügen zusätzlicher Verarbeitungsschichten vergrößert wird. Die Überlegung dabei ist, dass weitere Schichten die Resultate nicht verschlechtern können, wenn die Eingabe vorheriger Schichten noch unverändert vorhanden ist. Experimente bestätigen diese These. Residual Learning ist heute ein gebräuchliches Mittel beim Einsatz von vielschichtigen Netzwerken.
-		
+		\end{figure}
+		 Mit ResNets wird ein Problem von Deep Neural Networks gelöst, bei dem der Trainingsfehler durch Hinzufügen zusätzlicher Verarbeitungsschichten vergrößert wird. Die Überlegung dabei ist, dass weitere Schichten die Resultate nicht verschlechtern können, wenn die Eingabe vorheriger Schichten noch unverändert vorhanden ist. Experimente bestätigen diese These. Residual Learning ist heute ein gebräuchliches Mittel beim Einsatz von vielschichtigen Netzwerken.
 	
 			
 	\section{Kamerakalibrierung}
 		Eine Kamera ermöglicht es, ein dreidimensionales Objekt auf eine zweidimensionale Ebene zu projizieren. Diese Projektion kann, wie in \cite{Hartley} beschrieben, mit dem in Abbildung \ref{fig:Proj} dargestellten Modell angenähert werden, in dem von Punkten im dreidimensionalen Raum ein Strahl durch einen bestimmten Fixpunkt, das Projektionszentrum, verläuft und dabei eine vorgegebene Ebene, die Bildebene, schneidet. Der Schnittpunkt dieses Strahls mit der Bildebene entspricht dem projizierten Punkt auf dem entstehenden Bild.\\
 		\begin{figure}
 			\centering
-			\includegraphics[width=10cm]{img/Projektion.png}
-			\caption{Prinzip einer Lochkamera zur Projektion vom dreidimensionalen in den zweidimensionalen Raum \cite{Fusiello06elementsof}}
+			\includegraphics[width=15cm]{img/Projektion.png}
+			\caption{Prinzip einer Lochkamera zur Projektion vom dreidimensionalen in den zweidimensionalen Raum nach \cite{Fusiello06elementsof}. Von einem realen Punkt $M$ verläuft ein Strahl durch das Projektionszentrum C und schneidet die Bildebene im Bildpunkt $m$. Das Koordinatensystem ist so gewählt, dass sich $C$ im Ursprung befindet und die Y-Achse parallel zur Bildebene verläuft. Die Z-Achse schneidet die Bildebene im Bildzentrum $P$. Hat $M$ die Entfernung $z$ auf der Z-Achse und $y$ auf der Y-Achse und der Abstand zwischen $C$ und der Bildebene ist $f$, so Beträgt die Entfernung von $m$ zur Z-Achse $\frac{fy}{z}$.}
 			\label{fig:Proj}
 		\end{figure}
 		Offensichtlich werden alle Punkte im dreidimensionalen Raum, die auf einem Strahl durch das Projektionszentrum liegen, auf denselben Punkt in der Bildebene projiziert. Das Bild lässt sich also praktisch als eine Menge von Strahlen auffassen.\\
 		Ist eine Kamera kalibriert, ist es möglich, aus zwei Punkten auf einem damit aufgenommenen Bild den Winkel zwischen den beiden Strahlen zu bestimmen, durch die sie entstanden sind. Analog dazu kann beispielsweise aus dem Bild auf die Größe einer fotografierten Fläche geschlossen werden oder bestimmt werden, ob eine Ellipse auf dem Bild die Projektion eines Kreises ist. Um solche Berechnungen anzustellen sind zusätzliche Informationen notwendig, da bei der Kameraprojektion Informationen über Entfernungen, Längen, Winkel, Verhältnisse und dementsprechend Formen nicht erhalten bleiben.\\
-		Dass eine Kamera kalibriert ist, bedeutet im Praktischen Sinn, dass eine Matrix P bekannt ist, für die gilt:
-		\begin{math}
-			m = PM.
-		\end{math}
-		M bezeichnet dabei die homogenen Koordinaten eines Punktes im dreidimensionalen Raum und m diejenigen von dessen Projektion auf der Bildebene. Für weitere Informationen über homogene Koordinaten siehe \cite{Hartley}.\\
-		Kenntnis über die so genannte Projektions- oder Kameramatrix P ermöglicht also die Berechnung der zum Projektionszentrum relativen Koordinaten des projizierten Punktes aus denen des aufgenommenen Punktes und umgekehrt. Offensichtlich kann damit berechnet werden, wo ein mit einer kalibrierten Kamera aufgenommener Punkt im Bild einer anderen erscheint.
+		Dass eine Kamera kalibriert ist, bedeutet im Praktischen Sinn, dass eine Matrix $P$ berechenbar ist, für die gilt:
+		\begin{equation}
+			zm = PM.
+		\end{equation}
+		$M$ bezeichnet dabei die homogenen Koordinaten eines Punktes im dreidimensionalen Raum und $m$ diejenigen von dessen Projektion auf der Bildebene, $z$ ist ein reeller Faktor. Homogene Koordinaten unterscheiden sich von Euklidischen durch einen Zusätzlichen Parameter, der oft mit $T$ bezeichnet wird. Eine Koordinate im zweidimensionalen Raum hat also die Form: $(X,Y,Z,T)^T$. Es gilt dabei, dass der Punkt $(x,y,1)$ in homogenen Koordinaten äquivalent ist zum Punkt $(x,y)$ in euklidischen Koordinaten. Es gilt also:
+		\begin{equation}
+		\left(
+			\begin{array}{c}
+				x\\y
+			\end{array}
+		\right) \hat{=} \left(
+			\begin{array}{c}
+				x\\y\\1
+			\end{array}
+		\right)
+		\end{equation}
+		Für homogene Koordinaten mit $T \neq 0$ verhält es sich für alle $k \neq 0$ so, dass:
+		\begin{equation}
+			\left(
+			\begin{array}{c}
+			x\\y\\\omega
+			\end{array}
+			\right) = \left(
+			\begin{array}{c}
+			kx\\ky\\k\omega
+			\end{array}
+			\right)
+		\end{equation}
+		Eine Umrechnung in euklidische Koordinaten erfolgt folglich durch:
+		\begin{equation}
+			\left(
+			\begin{array}{c}
+			x\\y\\\omega
+			\end{array}
+			\right) \hat{=} \left(
+			\begin{array}{c}
+			\frac{x}{\omega}\\\frac{y}{\omega}
+			\end{array}
+			\right)
+		\end{equation}
+		Ein Punkt, in dem $T = 0$ gilt, bezeichnet man als "`Punkt im Unendlichen"'. Was hier beispielhaft für zwei Dimensionen dargestellt ist, kann offensichtlich für beliebig viele Dimensionen erweitert werden. Für weitere Informationen über homogene Koordinaten siehe \cite{Hartley}.\\
+		Kenntnis über die so genannte Projektions- oder Kameramatrix $P$ ermöglicht also die Berechnung der zum Projektionszentrum relativen Koordinaten des projizierten Punktes aus denen des aufgenommenen Punktes und umgekehrt. Offensichtlich kann damit berechnet werden, wo ein mit einer kalibrierten Kamera aufgenommener Punkt im Bild einer anderen erscheint.
+		Zum Ermitteln der Projektionsmatrix sind, wie in \cite{Fusiello06elementsof} beschrieben, folgende Informationen notwendig:
+		\begin{itemize}
+			\item Die Entfernung $f$ zwischen dem Projektionszentrum und der Bildebene.
+			\item Die Koordinaten des Bildzentrums $P = (p_x,p_y)$ .
+			\item Höhe $s_x$ und Breite $s_y$ der Pixel.
+			\item Der Scherungswinkel $\Theta$ zwischen den Achsen, der für Gewöhnlich $\frac{\Pi}{2}$ beträgt.
+		\end{itemize}
+		Diese Informationen lassen sich in der so genannten Kalibrierungsmatrix $K$ folgendermaßen Zusammenfassen:
+		\begin{equation}
+			K = 
+			\left[
+			\begin{array}{ccc}
+			\frac{f}{s_x} & \frac{f}{s_x}\cot\Theta & p_x\\
+			0 & \frac{f}{s_y} & p_y\\
+			0 & 0 & 1
+			\end{array}
+			\right]
+		\end{equation}
+		Ist die Kalibrierungsmatrix bekannt, muss noch die Position der Kamera durch die Rotationsmatrix $R$ und den Translationsvektor $t$ ausgedrückt werden. Dann kann die Projektionsmatrix berechnet werden mittels:
+		\begin{equation}
+			P = K\left[R|T\right]
+		\end{equation}

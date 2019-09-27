@@ -1,9 +1,37 @@
 \chapter{Datensätze}
+	Methoden, die auf überwachtes Lernen zurückgreifen, erfordern in der Regel eine große Menge an Trainingsdaten, um verwendbare Resultate zu erzielen. Das Erstellen von Labeln für semantische Segmentierung ist besonders aufwändig, da jedem Pixel des Bildes eine Klasse zugeordnet werden muss. Deshalb werden in dieser Arbeit die öffentlich zugänglichen Datensätze Cityscapes und KITTI genutzt. In dem Kapitel soll näher auf verfügbare Datensätze eingegangen und erläutert werden, weshalb diese beiden ausgewählt wurden.
 	\section{Cityscapes}
 		Cityscapes ist ein öffentlich zugänglicher Datensatz ausgelegt für Bildsegmentierung zum autonomen Fahren. Er bietet 5000 fein und 20000 grob auf Pixel-Ebene annotierte Bilder für semantische oder Instanzsegmentierung. Der Satz an fein annotierten Aufnahmen, der in den Experimenten verwendet wird, ist unterteilt in einen Trainingssatz aus 2975 Bildern, einem Evaluierungssatz von 500 Bildern und einem Testsatz aus 1525 Bildern. Aufgenommen ist der Datensatz von einem Auto aus in 50 größtenteils deutschen Städten, jeweils am Tag bei sonnigem oder bewölktem Wetter um Frühling, Sommer und Herbst. Die Bilder zeigen ausschließlich Szenen, die sich auf vielbefahrenen Straßen abspielen.\\
-		Die Daten sind aufgenommen mit einer Stereo-Kamera, die hinter der Windschutzscheibe des Fahrzeugs angebracht ist, bei einer Frame-Rate von 17Hz. Die Bilder des Datensatzes sind kalibriert, Bayer-gefiltert und rektifiziert.
-		\\Für weitere Informationen siehe \cite{Cityscapes}.
+		Die Daten sind aufgenommen mit einer Stereo-Kamera, die hinter der Windschutzscheibe des Fahrzeugs angebracht ist, bei einer Frame-Rate von 17Hz. Die Bilder des Datensatzes sind kalibriert, Bayer-gefiltert und rektifiziert. Abbildung \ref{fig:BspCS} zeigt Beispiele.
+		Für weitere Informationen siehe \cite{Cityscapes}.\\
+		\begin{figure}
+			\centering
+			\includegraphics[width=15cm]{img/Cityscapes.png}
+			\caption{Hier zu sehen sind beispielhaft fein annotierte Trainingsdaten für semantische Segmentierung aus dem Cityscapes-Datensatz. Wie man sieht, werden die Bilder (links) von einer hinter der Windschutzscheibe platzierten Kamera aufgenommen. Die rechte Spalte zeigt die eingefärbte Ground Truth für semantische Segmentierung. Die schwarz markierten Bildflächen gehören keiner im Datensatz gelabelten Klasse an und werden während des Trainings ignoriert.}
+			\label{fig:BspCS}
+		\end{figure}
+		Die große Anzahl an qualitativ hochwertigen Bilder und Annotationen, sowie deren Verfügbarkeit machen Cityscapes zu einer logischen Wahl für diese Arbeit. 2975 Bilder scheinen eine vergleichbar kleine Datenmenge zu sein, doch die Information, die in einem Bild enthalten ist, ist ungleich größer als beispielsweise in für Klassifizierung annotierten Bildern.
 	\section{KITTI}
 		Das in \cite{KITTI} beschriebene KITTI ist ein Datensatz für Forschung in den Bereichen mobile Robotik und autonomes Fahren. Es werden darin Kamerabilder, Laserscans, GPS- und IMU-Daten zur Verfügung gestellt. Die Kamerabilder werden von zwei Stereo-Kamera-Rigs aufgenommen, eines für Farbaufnahmen, eines für Graustufenbilder und liegen sowohl als Rohdaten als auch rektifiziert vor. Die Laserscan-Daten sind im Velodyne LiDAR-Format gespeichert. Die Kalibrierungs-Matrizen sind im Rohdatensatz ebenfalls angegeben.\\
 		Der Datensatz umfasst insgesamt 6 Stunden an Aufnahmen mit zwischen 10Hz und 100Hz aus Karlsruhe. KITTI bietet außerdem 200 für Segmentierung annotierte Bilder. Die Messgeräte sind auf einer mobilen Plattform auf einem Auto angebracht. Die Perspektive unterscheidet sich also geringfügig von der der Cityscapes-Daten. Für weitere Informationen über die verwendeten Messgeräte siehe \cite{KITTI}.\\
-		Im Gegensatz zum Cityscapes-Datensatz, der sich auf Straßenverkehr spezialisiert, wird im KITTI-Datensatz versucht, eine möglichst große Szenenvielfalt anzubieten.
+		Im Gegensatz zum Cityscapes-Datensatz, der sich auf Straßenverkehr spezialisiert, wird im KITTI-Datensatz versucht, eine möglichst große Szenenvielfalt anzubieten. Beispiele für Bilder des Datensatzes sind in Abbildung \ref{fig:BspKT} zu sehen. KITTI wird in dieser Arbeit verwendet, da darin, im Gegensatz zu Cityscapes, neben der Bilder Punktwolken und Projektionsmatrizen zur Verfügung gestellt werden. Die mit Cityscapes konformen Trainingsdaten für semantische Segmentierung erlauben noch dazu Experimente mit der Verfeinerung des Netzes durch Nachtraining und Auswertung der vom Netz produzierten Ergebnisse mit anderen Daten als dem Cityscapes-Datensatz.
+		\begin{figure}
+			\centering
+			\includegraphics[width=15cm]{img/Kitti.png}
+			\caption{Beispiele aus dem KITTI-Datensatz für semantische Segmentierung. Auf die Abbildung der Ground Truth wird verzichtet, da keine eingefärbte Version bereitgestellt wird und es sich nicht in erster Linie um einen Datensatz für Segmentierung handelt. Die Bilder sind von einer mobilen Plattform aufgenommen, die sich auf dem Fahrzeug befindet, weshalb die Perspektive sich von der der Cityscapes-Daten unterscheidet.}
+			\label{fig:BspKT}
+		\end{figure}
+	
+	\section{COCO}
+		Bei dem in \cite{DBLP:journals/corr/LinMBHPRDZ14} von Microsoft vorgestellten COCO (Common Objects in Context) handelt es sich um einen umfangreichen Datensatz für Instanz-Segmentierung. Es werden darin 328.000 Bilder mit insgesamt 2,5 Millionen annotierten Instanzen geboten. Das Bildmaterial für COCO stammt aus dem Internet, wobei nicht-ikonische Bilder, die Objekte aus untypischen Perspektiven zeigen, bevorzugt wurden. Da sich die Annotationen auf zählbare Objekte beschränken, ist der COCO-Datensatz für den Zweck dieser Arbeit nicht geeignet.
+		
+	\section{Pascal VOC}
+		Wie in \cite{Everingham10} beschrieben, ist Pascal VOC (Visual Object Classes) eine Sammlung öffentlich zugänglicher Datensätze für Bildklassifizierung, Objekt-Detektion, Segmentierung und Personen-Layout (Detektierung von Körperteilen), sowie ein jährlicher Wettbewerb in diesen Bereichen im Zeitraum von 2007 bis 2012. Die Hauptdisziplinen sind dabei Bildklassifizierung und Objekt-Detektion. Der letzte Stand von Pascal aus dem Jahr 2012 umfasst insgesamt 11.530 Bilder mit 27.450 Region-of-Interest-annotierten Objekten und 6.929 Segmenten aus 20 verschiedenen Klassen. Die Bilder für die Datensätze stammen aus dem Internet und sind ohne Präferenz hinsichtlich Bildqualität, Perspektive, Beleuchtung und Ähnlichem ausgewählt.\\
+		In \cite{mottaghi_cvpr14} wird ein Datensatz vorgestellt, der den Anforderungen dieser Arbeit entspricht und eine valide Alternative zu Cityscapes darstellen könnte. Im gegebenen Kontext wird trotzdem Cityscapes verwendet wegen dessen stärkeren Praxisbezugs und konsequenteren Label-Politik. Dazu kommt, dass Pascal Daten aus allgemeinen Szenen anbietet, während sich Cityscapes auf den Straßenverkehr konzentriert und für dieses Thema leichter LiDAR-Daten gefunden werden können.
+		
+	\section{WildDash}
+		WildDash \cite{Zendel_2018_ECCV} ist ein Datensatz, der spezifisch für das Testen von Methoden zur Bildsegmentierung mit Szenen aus dem Straßenverkehr zusammengestellt ist. Ähnlich wie bei KITTI ist der Satz an annotierten Bildern nicht ausreichend, um einen adäquaten Trainingssatz zu bilden, ist aber konform mit Cityscapes und kann eine sinnvolle Erweiterung von dessen Trainingssatz darstellen.\\
+		Die Bilder in WildDash stammen von "`YouTube-Autoren"' und sind nach speziellen Kriterien ausgewählt. Zu diesen gehört unter anderem, dass in den Daten Situationen gezeigt werden, die erfahrungsgemäß schwierig auszuwerten sind und potentiell Risiken darstellen, wie zum Beispiel Tiere auf der Fahrbahn und Tunnelausfahrten. Außerdem enthält der Datensatz negative Testfälle, also Bilder bei denen ein schlechtes Ergebnis erwartet wird, wie beispielsweise ein gedrehtes Bild.\\
+		Im Rahmen dieser Arbeit wird der KITTI-Datensatz als geeigneter angesehen, da darin auch Punktwolken gestellt und hauptsächlich städtische Szenen gezeigt werden. Außerdem erscheinen Testergebnisse auf dem WildDash-Datensatz weniger repräsentativ.
+		
+		

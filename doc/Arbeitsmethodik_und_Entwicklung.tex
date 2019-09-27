@@ -1,11 +1,20 @@
 \chapter{Arbeitsmethodik und Entwicklung}
+	\section{Algorithmus}
+		Es gibt mehrere Ansätze zum Segmentieren von Punktwolken mit Neuronalen Netzen, die unterschiedliche Leistungen bezüglich Laufzeit und Qualität erzielen. In dieser Arbeit wird ein möglichst einfacher und zeiteffizienter Algorithmus angewandt. Dabei wird, wie in Abbildung \ref{fig:Verfahren} dargestellt, zuerst ein Eingabebild mit Hilfe neuronaler Netze semantisch segmentiert. Dazu wird an dieser Stelle DeepLabV3+ benutzt, da es mit seinen Ergebnissen auf populären Datensätzen (79.7\% auf Pascal VOC 2012 und 70.4\% auf Cityscapes in mIOU-Metrik) laut \cite{DeepLab2}, als State-of-the-Art angesehen wird und gleichzeitig eine große Fülle an Informationen und öffentlichen Implementierungen zur Verfügung stehen. \\
+		Die durch die Segmentierung ermittelten Labels werden anschließend auf eine Punktwolke projiziert, die dieselbe Szene wie das segmentierte Bild darstellt. Dazu werden ein Bild und eine Punktwolke der zu segmentierenden Szene, sowie eine Projektionsmatrix benötigt. die verwendete Kamera muss also kalibriert sein. Offensichtlich ist es damit nur möglich, den Bereich der Punktwolke zu segmentieren, der im Bild zu sehen ist. Außerdem werden auf diese Weise keine in der Punktwolke vorhandenen Tiefen-Information ausgenutzt. Stattdessen können Farb-Informationen berücksichtigt werden.
+		\begin{figure}
+			\centering
+			\includegraphics[width = 1\linewidth]{img/Verfahren.png}
+			\caption{Schematische Arbeitsweise des Systems. Ein Eingabebild wird zunächst mit DeepLab segmentiert. Die so entstandenen Labels werden unter Verwendung einer Projektionsmatrix auf eine zum Eingabebild gehörende Punktwolke projiziert.}
+			\label{fig:Verfahren}
+		\end{figure}
 	\section{DeepLab}
 		DeepLab ist ein von Google entwickeltes, 2015  in \cite{DeepLab1} vorgestelltes Modell für semantische Segmentierung. Bei der in \cite{DeepLab2} vorgestellten Methode wird ein Deep Convolutional Neural Network (DCNN) zum Erzeugen einer Score Map benutzt, die anschließend mit einem Conditional Random Field (CRF) zur endgültigen Ausgabe weiterverarbeitet wird. Das Verfahren wird in Abbildung \ref{fig:DeepLabAblauf} grob dargestellt.
 		
 		\begin{figure}
 			\centering
 			\includegraphics[width = 0.9\linewidth]{img/DeepLabAblauf.png}
-			\caption{Grundsätzliche Funktionsweise von DeepLab}
+			\caption{Arbeitsfluss von DeepLab nach \cite{DeepLab2}. Das Eingabebild wird von einem DCNN segmentiert. Das Ergebnis wird durch Bilineare Interpolation auf die Größe der Eingabe vergrößert und in einem Fully Connected CRF raffiniert.}
 			\label{fig:DeepLabAblauf}
 		\end{figure}  
 		
@@ -29,7 +38,7 @@
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=15cm]{img/BeispielErgebnis.png}
-			\caption{Beispiel für die Ausgabe des Evaluierungs-Skripts}
+			\caption{Beispiel für die Ausgabe des Evaluierungs-Skripts. Zu sehen ist das Eingabebild (oben links), das segmentierte Bild (oben rechts), eine Legende, die den IoU für jede Klasse enthält (unten links) und ein RGB-Farbhistogramm (unten rechts). Die Rechenzeit des Netzes und der durchschnittliche IoU werden über dem segmentierten Bild angezeigt.}
 			\label{fig:BspPr}
 		\end{figure}
 		In einem nächsten Schritt soll die Möglichkeit geschaffen werden, ein eigenes Model mit eigenen Trainingsdaten zu trainieren. Das bereits vorhandene Trainings-Skript kann dazu verwendet werden. Die Verwendung von Nebenläufigkeit beim Laden der Trainingsdaten führt allerdings unter Windows dazu, dass das Training nach einer Epoche abgebrochen wird. Auch hier wird erwartet, dass die Daten im Format von Cityscapes oder Pascal sind. Da hier vor allem der Cityscapes-Datensatz zum Trainieren verwendet wird und dieser einfach zu erweitern ist, wird das als sinnvoll eingeschätzt und mit einer Änderung in den Nomenklatur-Regeln beibehalten. Zum Beginnen eines Trainings muss eine Konfigurationsdatei im YAML-Format übergeben werden. Darin können folgende Trainingsparameter festgelegt werden:
@@ -42,7 +51,7 @@
 			\item Batch-Größe
 			\item Verwendung von FP16
 			\item Fehler-Typ
-			\item zu ignorierendes Label (255 in Cityscapes)
+			\item zu ignorierender Index (255 in Cityscapes)
 			\item Optimierer
 			\item Grundlernrate
 		\end{itemize}
@@ -56,7 +65,7 @@
 			\begin{figure}[h]
 				\centering
 				\includegraphics[width=15cm]{img/SeparableConvolution.png}
-				\caption{Schematische Darstellung des Prinzip von Depthwise Separable Convolution zur Tensorverarbeitung \cite{MobileNetV2}}
+				\caption{Schematische Darstellung des Prinzip von Depthwise Separable Convolution zur Tensorverarbeitung nach \cite{MobileNetV2}. Statt einer Faltung mit einem 3x3-Kernel über alle Dimensionen, wird für jede Dimension eine Faltung mit einem 3x3-Kernel durchgeführt, gefolgt von einer Faltung mit einem 1x1-Kernel über alle Dimensionen.}
 				\label{fig:SepConv}
 			\end{figure}
 			Das vorgestellte Netz hat insgesamt 36 Faltungsschichten, die in 14 Module gegliedert sind, die als ResNet miteinander verbunden sind In jeder Schicht werden nach dem oben erklärten Prinzip mehrere Faltungen mit 3x3 Filtern parallel auf allen Kanälen durchgeführt. Der so entstandene Tensor wird anschließend mit einem 1x1 Filter gefaltet, der alle Dimensionen umfasst.
@@ -70,6 +79,6 @@
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=15cm]{img/BeispielPWSegmentierung.png}
-			\caption{Beispiel für segmentierte Punktwolke (von oben nach unten: Originalbild, Ergebnis von DeepLab, segmentierte Punktwolke aus verschiedenen Perspektiven)}
+			\caption{Beispiel für segmentierte Punktwolke aus dem KITTI-Datensatz. Zu sehen ist von oben nach unten: Originalbild, Ergebnis von DeepLab, segmentierte Punktwolke aus verschiedenen Perspektiven.}
 			\label{fig:BspPW}
 		\end{figure}

@@ -15,10 +15,11 @@
 		Dabei steht TP für True Positives, also richtig erkannte Pixel, FP für False Positives und FN für False Negatives. Da in diesem System jedem  Pixel eine gültige Klasse zugeordnet wird, sind FP und FN hier stets identisch.
 		
 		\subsection{MobileNetV2}
+			\label{sec:mn2}
 			Da Echtzeitfähigkeit eine wichtige Rolle spielt, konzentrieren sich die Experimente auf das leichtgewichtige MobileNetV2, statt dem leistungsfähigeren Xception65. Das erste Experiment beschäftigt sich mit dem Finden der idealen Trainingsdauer.
 			%\subsubsection{Auswirkungen der Trainingsdauer}
 			\begin{table}[h]
-			
+				\centering
 				\begin{tabular}{l|cccccc}
 					Epochen trainiert & 1 & 5 & 10 & 15 & 25 & 30\\\hline
 					IoU Straße & 0.6260 & 0.6498 & 0.6727 & 0.6729 & 0.6774 & 0.6675\\\hline
@@ -45,14 +46,14 @@
 					
 						
 				\end{tabular}
-				\caption{Bewertung von Models in Intersection-over-union (IoU) Metrik in Abhängigkeit der Trainingsdauer}
+				\caption{Die Tabelle zeigt die Bewertung von Models in Intersection-over-union (IoU) Metrik in Abhängigkeit der Trainingsdauer.}
 				\label{lbl: IoUs}
 			\end{table}
 		
 			\begin{figure}[h]
 				\centering
 				\includegraphics[width=15cm]{img/IoUMobilenet.png}
-				\caption{Durchschnittlicher IoU in Abhängigkeit der Anzahl trainierter Epochen}
+				\caption{Durchschnittlicher IoU in Abhängigkeit der Anzahl trainierter Epochen. Der Graph erreicht sein Maximum bei 25 Epochen und fällt danach leicht ab, was auf Overfitting schließen lässt.}
 				\label{fig:IoUMn}
 			\end{figure} 
 		
@@ -61,7 +62,7 @@
 			\begin{figure}
 				\centering
 				\includegraphics[width=15cm]{img/KlasseIoUMobilenet.png}
-				\caption{IoU für jede Klasse vom Test des für 25 Epochen trainierten Netzes}
+				\caption{IoU für jede Klasse vom Test des für 25 Epochen trainierten Netzes. Das Diagramm zeigt gute Ergebnisse für amorphe Klassen und schlechtere für kleine Objekte. Zu sehen ist auch, dass einige Klassen, die in den Trainingsdaten selten vorkommen oder Ähnlichkeit mit anderen Klassen aufweisen, nicht erkannt werden.}
 				\label{fig:KIoUMn}
 			\end{figure} 
 		
@@ -72,7 +73,7 @@
 			\begin{figure}
 				\centering
 				\includegraphics[width=15cm]{img/BeispielMobilenet.png}
-				\caption{Beispiele für Ausgaben des Models (25 Epochen trainiert)\\ Von links nach rechts: Eingabebild, Ground Truth, Ausgabe von DeepLab}
+				\caption{Zu sehen sind Beispiele für Ausgaben des Models mit der besten Bewertung im vorherigen Experiment (25 Epochen trainiert).\\ Von links nach rechts gezeigt sind Eingabebild, Ground Truth, Ausgabe von DeepLab.}
 				\label{fig:BspMn}
 			\end{figure} 
 			
@@ -83,7 +84,7 @@
 		Wir betrachten den Xception65-Backbone im Vergleich zu MobileNetV2. Auf ein Experiment mit unterschiedlichen Trainingsepochen wird an dieser Stelle aufgrund der langen Trainingsdauer der Netze verzichtet. Das verwendete Model ist 60 Epochen lang trainiert mit denselben Hyperparametern wie die Models mit MobileNetV2.
 		
 		\begin{table}[h]
-			
+			\centering
 			\begin{tabular}{l|cc|c}
 				 & Xception65 & MobileNetV2 &  Differenz \\\hline
 				IoU Straße & 0.6951 & 0.6774 & 0.0177 \\\hline
@@ -110,14 +111,14 @@
 				Verarbeitungszeit [ms] & & & \\
 				
 			\end{tabular}
-			\caption{Vergleich zwischen Xception65 und MobileNetV2 in IoU-Metrik und Verarbeitungszeit}
+			\caption{Gezeigt ist ein Vergleich zwischen den Ergebnissen von DeepLab mit Xception65 und MobileNetV2 in IoU-Metrik und der Verarbeitungszeit.}
 			\label{lbl: XcVsMn}
 		\end{table}
 	
 		\begin{figure}
 			\centering
 			\includegraphics[width=15cm]{img/XceptionVsMobileNet.png}
-			\caption{Vergleich Xception65 und MobileNetV2 in IoU-Metrik}
+			\caption{Der Vergleich von Xception65 und MobileNetV2 in IoU-Metrik zeigt, dass Xception die besten Ergebnisse bei denselben Klassen wie MobileNetV2 produziert, aber deutlich besser beim Erkennen von Objekten und Details ist.}
 			\label{fig:XcVsMn}
 		\end{figure} 
 		
@@ -128,23 +129,43 @@
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=15cm]{img/BeispielXception.png}
-			\caption{Beispiele für Ausgaben des Models\\ Von links nach rechts: Eingabebild, Ground Truth, Ausgabe von DeepLab}
+			\caption{Gezeigt sind Beispiele für Ausgaben des Models, das Xception65 nutzt.\\ Von links nach rechts zu sehen ist Eingabebild, Ground Truth, Ausgabe von DeepLab.}
 			\label{fig:BspXc}
 		\end{figure} 
 		
 		
 		
 	\section{Verfeinerung mit KITTI}
-		In diesem Experiment wird das am besten bewertete, mit Cityscapes trainierte Model mit MobileNetV2 als Backbone mehrere Epochen mit den 200 Bildern umfassenden Trainingsdaten für semantische Segmentierung von KITTI nachtrainiert. Die Resultierenden Models werden anschließend mit anderen Bildern aus dem KITTI-Datensatz getestet. Da KITTI nur für diese 200 Bilder eine Ground Truth zur Verfügung stellt und ein Test auf den Trainingsdaten wenig aussagekräftig ist, ist es nicht möglich, die Ergebnisse mit der IoU-Metrik zu bewerten. Das Experiment begnügt sich deshalb mit einer empirischen Auswertung. \\
+		In diesem Experiment wird das am besten bewertete, mit Cityscapes trainierte Model mit MobileNetV2 als Backbone mehrere Epochen mit den 200 Bildern umfassenden Trainingsdaten für semantische Segmentierung von KITTI nachtrainiert. Die Resultierenden Models werden anschließend mit anderen Bildern aus dem KITTI-Datensatz getestet. Da KITTI nur für diese 200 Bilder eine Ground Truth zur Verfügung stellt und ein Test auf den Trainingsdaten wenig aussagekräftig ist, begnügt sich das Experiment in diesem Fall mit einer empirischen Auswertung.\\
 		Abbildung \ref{fig:Verf} zeigt beispielhaft je ein Bild aus beiden Datensätzen und die Ausgaben von DeepLab für verschieden lang nachtrainierte Models.  
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=15cm]{img/Verfeinerung.png}
-			\caption{Beispiel für Ausgabe der verfeinerter Models}
+			\caption{Beispiel für Ausgabe von mit KITTI-Daten verfeinerter Models. Die erste Epoche der Verfeinerung zeigt die größte Verbesserung auf den KITTI-Daten und gleichzeitig eine deutliche Verschlechterung bei Cityscapes-Bildern. Dieses Verhalten ist durch ein Nachtraining mit Cityscapes reversibel. Das Experiment zeigt, dass Overfitting ein Problem des Netzes ist.}
 			\label{fig:Verf}
 		\end{figure} 
 		Wie man sieht, tritt bei den Ergebnissen auf dem KITTI-Datensatz bereits nach einer Epoche Verfeinerung mit KITTI-Daten eine deutliche Verbesserung auf. Weitere Trainingsepochen verbessern die Ergebnisse weiter, aber weniger erheblich. Gleichzeitig verschlechtert sich die Ausgabe für ein Bild aus dem Cityscapes-Datensatz in ähnlichem Maße. \\Das unterste Bild von Abbildung \ref{fig:Verf} zeigt die Ausgabe eines Models, das für 25 Epochen auf Cityscapes-Daten trainiert, für 5 Epochen mit KITTI-Daten verfeinert und anschließend für eine Epoche mit Cityscapes-Daten nachtrainiert ist. Wie man sieht, führt die Verfeinerung mit dem ursprünglichen Datensatz wieder zu einer Verschlechterung der Ergebnisse auf KITTI-Bildern und einer Verbesserung auf Cityscapes-Bildern.\\
-		Diese Beobachtungen bestärken die Vermutung, dass beim Trainieren des Netzes Overfitting auftritt.
+		Diese Beobachtungen bestärken die Vermutung, dass beim Trainieren des Netzes Overfitting auftritt.\\
+		
+		In einem nächsten Schritt soll untersucht werden, wie die Berücksichtigung der KITTI-Daten beim gesamten Lernprozess die Ergebnisse auf beiden Datensätzen beeinflusst. Dazu wird der annotierte KITTI-Datensatz geteilt in einen Trainings- und Evaluierungssatz zu je 100 Bildern. Dadurch wird es möglich, eine Aussagekräftige Bewertung in IoU-Metrik zu berechnen. Aufbauend auf dem vorherigen Experiment wird ein Model mit gemischten Daten für 24 Epochen trainiert und ausgewertet. Danach wird es für eine Epoche ausschließlich mit KITTI-Daten verfeinert und dann für eine weitere Epoche mit dem gesamten, gemischten Trainingssatz nachtrainiert. Damit ist das letzte Model 25 Epochen auf den gemischten Daten trainiert und hat damit genauso viele Lernschritte auf Cityscapes-Bilder absolviert wie das am besten Bewertete Model von Abschnitt \ref{sec:mn2}. Die Ergebnisse sind in Tabelle \ref{res:mix} eingetragen. 
+		 
+		\begin{table}
+			\centering
+			\begin{tabular}{p{4cm}|m{3cm}m{3cm}}
+				
+				& Durchschnittlicher IoU & Durchschnittlicher IoU \\
+				Trainingsverhalten&  auf Cityscapes-Bildern & auf KITTI-Bildern\\\hline
+				25 Epochen mit Cityscapes-Daten & 0.2625 & 0.1681\\\hline
+				24 Epochen mit gemischten Daten & 0.2605 & 0.2002\\\hline
+				24 Epochen mit gemischten Daten + 1 Epoche mit KITTI-Daten & 0.2045 & 0.2350\\\hline
+				24 Epochen mit gemischten Daten + 1 Epoche mit KITTI-Daten + 1Epoche mit gemischten Daten & 0.2718 & 0.2105
+				
+				
+			\end{tabular}
+			\label{res:mix}
+			\caption{Die Tabelle zeigt die Bewertung von Netzwerken mit unterschiedlich verfeinerten Trainingsdaten und -verhalten auf Evaluierungssätzen von Cityscapes und KITTI.}
+		\end{table}
+		
 	\section{Aufgetretene Probleme und Lösungen}
 		\subsection{False Positives}
 			Models, die MobileNetV2 benutzen neigen dazu, einige Klassen zum Großteil mit einer anderen zu klassifizieren. Beispiele dafür sind die bereits angesprochene Erkennung von Fahrrädern als Personen und die Klassifizierung großer Fahrzeuge als Gebäude. \\
@@ -152,7 +173,7 @@
 			\begin{figure}
 				\centering
 				\includegraphics[width=15cm]{img/BeispielBadXception.png}
-				\caption{Beispiele für fehlerhafte Ausgaben des Models mit Xception65\\ Von links nach rechts: Eingabebild, Ground Truth, Ausgabe von DeepLab}
+				\caption{Hier zu sehen sind Beispiele für Ausgaben des Models mit Xception65, die das oben beschriebene Phänomen aufweisen.\\ Von links nach rechts gezeigt sind Eingabebild, Ground Truth, Ausgabe von DeepLab. Das Verhalten ist auf den jeweiligen Bildern reproduzierbar.}
 				\label{fig:BspBadXc}
 			\end{figure} 
 		\subsection{Overfitting}
