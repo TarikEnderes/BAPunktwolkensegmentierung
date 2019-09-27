@@ -147,7 +147,7 @@
 		Wie man sieht, tritt bei den Ergebnissen auf dem KITTI-Datensatz bereits nach einer Epoche Verfeinerung mit KITTI-Daten eine deutliche Verbesserung auf. Weitere Trainingsepochen verbessern die Ergebnisse weiter, aber weniger erheblich. Gleichzeitig verschlechtert sich die Ausgabe für ein Bild aus dem Cityscapes-Datensatz in ähnlichem Maße. \\Das unterste Bild von Abbildung \ref{fig:Verf} zeigt die Ausgabe eines Models, das für 25 Epochen auf Cityscapes-Daten trainiert, für 5 Epochen mit KITTI-Daten verfeinert und anschließend für eine Epoche mit Cityscapes-Daten nachtrainiert ist. Wie man sieht, führt die Verfeinerung mit dem ursprünglichen Datensatz wieder zu einer Verschlechterung der Ergebnisse auf KITTI-Bildern und einer Verbesserung auf Cityscapes-Bildern.\\
 		Diese Beobachtungen bestärken die Vermutung, dass beim Trainieren des Netzes Overfitting auftritt.\\
 		
-		In einem nächsten Schritt soll untersucht werden, wie die Berücksichtigung der KITTI-Daten beim gesamten Lernprozess die Ergebnisse auf beiden Datensätzen beeinflusst. Dazu wird der annotierte KITTI-Datensatz geteilt in einen Trainings- und Evaluierungssatz zu je 100 Bildern. Dadurch wird es möglich, eine Aussagekräftige Bewertung in IoU-Metrik zu berechnen. Aufbauend auf dem vorherigen Experiment wird ein Model mit gemischten Daten für 24 Epochen trainiert und ausgewertet. Danach wird es für eine Epoche ausschließlich mit KITTI-Daten verfeinert und dann für eine weitere Epoche mit dem gesamten, gemischten Trainingssatz nachtrainiert. Damit ist das letzte Model 25 Epochen auf den gemischten Daten trainiert und hat damit genauso viele Lernschritte auf Cityscapes-Bilder absolviert wie das am besten Bewertete Model von Abschnitt \ref{sec:mn2}. Die Ergebnisse sind in Tabelle \ref{res:mix} eingetragen. 
+		In einem nächsten Schritt soll untersucht werden, wie die Berücksichtigung der KITTI-Daten beim gesamten Lernprozess die Ergebnisse auf beiden Datensätzen beeinflusst. Dazu wird der annotierte KITTI-Datensatz geteilt in einen Trainings- und Evaluierungssatz zu je 100 Bildern. Dadurch wird es möglich, eine Aussagekräftige Bewertung in IoU-Metrik zu berechnen. Aufbauend auf dem vorherigen Experiment wird ein Model mit gemischten Daten für 24 Epochen trainiert (B) und ausgewertet. Danach wird es für eine Epoche ausschließlich mit KITTI-Daten verfeinert (C) und dann für eine weitere Epoche mit dem gesamten, gemischten Trainingssatz nachtrainiert (D). Damit ist das letzte Model 25 Epochen auf den gemischten Daten trainiert und hat damit genauso viele Lernschritte auf Cityscapes-Bilder absolviert wie das am besten Bewertete Model von Abschnitt \ref{sec:mn2} (A). Die Ergebnisse sind in Tabelle \ref{res:mix} eingetragen und in Abbildung \ref{fig:Verg} graphisch dargestellt. 
 		 
 		\begin{table}
 			\centering
@@ -155,10 +155,10 @@
 				
 				& Durchschnittlicher IoU & Durchschnittlicher IoU \\
 				Trainingsverhalten&  auf Cityscapes-Bildern & auf KITTI-Bildern\\\hline
-				25 Epochen mit Cityscapes-Daten & 0.2625 & 0.1681\\\hline
-				24 Epochen mit gemischten Daten & 0.2605 & 0.2002\\\hline
-				24 Epochen mit gemischten Daten + 1 Epoche mit KITTI-Daten & 0.2045 & 0.2350\\\hline
-				24 Epochen mit gemischten Daten + 1 Epoche mit KITTI-Daten + 1Epoche mit gemischten Daten & 0.2718 & 0.2105
+				25 Epochen mit Cityscapes-Daten (A)& 0.2625 & 0.1681\\\hline
+				24 Epochen mit gemischten Daten (B)& 0.2605 & 0.2002\\\hline
+				24 Epochen mit gemischten Daten + 1 Epoche mit KITTI-Daten (C)& 0.2045 & 0.2350\\\hline
+				24 Epochen mit gemischten Daten + 1 Epoche mit KITTI-Daten + 1Epoche mit gemischten Daten (D)& 0.2718 & 0.2105
 				
 				
 			\end{tabular}
@@ -166,6 +166,30 @@
 			\caption{Die Tabelle zeigt die Bewertung von Netzwerken mit unterschiedlich verfeinerten Trainingsdaten und -verhalten auf Evaluierungssätzen von Cityscapes und KITTI.}
 		\end{table}
 		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=12cm]{img/VergleichCK.png}
+			\caption{Graphische Darstellung der Ergebnisse von Tabelle \ref{res:mix}. Besonders auffällig sind die Unterschiede bei den Ergebnissen auf den KITTI-Daten (rot) und der Einbruch bei denen der Cityscapes-Bilder (blau) in Model C.}
+			\label{fig:Verg}
+		\end{figure} 
+		
+		
+		Verglichen mit Model A zeigen die Ergebnisse bei Model B deutlich bessere Ergebnisse bei den KITTI-Daten, während die auf den Cityscapes-Daten etwa gleich sind. In Model C zeigt sich ein ähnliches Verhalten wie im vorherigen Experiment mit einer deutlichen Verbesserung bei Den KITTI-Daten und einer Verschlechterung bei den Cityscapes-Daten. Die Ergebnisse von Model D weisen auf beiden Datensätzen eine Verbesserung gegenüber denen von Model A auf, wobei der unterschied bei den Bildern von KITTI deutlich größer ist. Allerdings verschlechtern sich die Ergebnisse von Model D bei den KITTI-Daten bezüglich Model C.\\
+		Die Ergebnisse zeigen, dass das Hinzufügen zusätzlicher Trainingsdaten, was zu einer größeren Varietät darin führt, einen positiven Effekt auf die Leistung des Netzes hat.\\
+		Abbildung \ref{fig:VergMix} zeigt die Ausgabe der verschiedenen Models auf den Bildern vom vorherigen Versuch, einem aus dem KITTI-, einem aus dem Cityscapes-Datensatz. Bei den Ergebnissen des Cityscapes-Bildes zeigen die Models A, B und D ähnliche Resultate und Model C ein deutlich schlechteres, was die Bewertung aus Tabelle \ref{res:mix} widerspiegelt. Das Resultat von Model C ist jedoch augenscheinlich besser als die der mit KITTI verfeinerten Models in Abbildung \ref{fig:Verf}. Bei dem Bild aus KITTI liefern Models B, C und D erwartungsgemäß deutlich bessere Ergebnisse als Model A. Das empirisch beste Resultat erzielt Model C, das aber das schlechteste auf dem Cityscapes-Bild produziert. Die Ergebnisse von Model D zeigen eine geringfügige, aber erkennbare Verbesserung gegenüber Model B.\\
+		Dieses Experiment zeigt, dass eine hohe Varietät innerhalb der Trainingsdaten wünschenswert ist. Ist die Art der Daten bekannt, auf denen das Netz angewandt werden soll, ist es zudem ratsam, es mit annotierten Beispieldaten zu verfeinern.
+	
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=12cm]{img/VergleichMix.png}
+			\caption{Hier sieht man beispielhaft Ergebnisse für ein Bild aus dem KITTI- und eines aus dem Cityscapes-Datensatz. Die Bilder sind dieselben wie in Abbildung \ref{fig:Verf}, um einen Vergleich zu ermöglichen. Wie man sieht, zeigen die Models A, B und D ähnlich gute Ergebnisse auf dem Cityscapes-Bild. Auf dem KITTI-Bild erzielt die besten Ergebnisse das Model C, das die schlechtesten auf Cityscapes liefert. Auf dem KITTI-Bild erzeugen auch die Models B und D bessere Resultate als Model A, das komplett ohne KITTI-Daten trainiert ist.}
+			\label{fig:VergMix}
+		\end{figure} 
+	
+	\section{Segmentierung von Punktwolken}
+		In diesem Abschnitt sollen die 
+	
 	\section{Aufgetretene Probleme und Lösungen}
 		\subsection{False Positives}
 			Models, die MobileNetV2 benutzen neigen dazu, einige Klassen zum Großteil mit einer anderen zu klassifizieren. Beispiele dafür sind die bereits angesprochene Erkennung von Fahrrädern als Personen und die Klassifizierung großer Fahrzeuge als Gebäude. \\
@@ -178,5 +202,5 @@
 			\end{figure} 
 		\subsection{Overfitting}
 			Overfitting hat sich als eines der hauptsächlichen Probleme bei der Verwendung von MobileNetV2 herausgestellt. Schon kleine Änderungen in der Perspektive, wie sie beispielsweise im KITTI-Datensatz auftritt, verursachen eine spürbare Verschlechterung der Ergebnisse. \\
-			Um bessere Ergebnisse auf dem KITTI-Datensatz zu erzeugen, hat es sich als vorteilhaft herausgestellt, den Trainingssatz für semantische Segmentierung der KITTI-Daten beim Trainieren des Netzes mitzuberücksichtigen. Das Netz mit jenen Daten nachzutrainieren verbessert ebenfalls die Ergebnisse, kann aber wiederum zu Overfitting auf diesen Datensatz führen. Es kann hilfreich sein, nach dem Nachtraining noch eine Epoche mit allen verfügbaren Daten nachzutrainieren.\\
+			Um bessere Ergebnisse auf dem KITTI-Datensatz zu erzeugen, hat es sich als vorteilhaft herausgestellt, den Trainingssatz für semantische Segmentierung der KITTI-Daten beim Trainieren des Netzes mitzuberücksichtigen. Das Netz mit jenen Daten nachzutrainieren verbessert ebenfalls die Ergebnisse, kann aber wiederum zu Overfitting auf diesen Datensatz führen. Es kann hilfreich sein, nach dem Nachtraining noch eine Epoche mit allen verfügbaren Daten nachzutrainieren. Allgemein wirkt eine hohe Varietät innerhalb der Trainingsdaten vorbeugend.\\
 			Weitere Möglichkeiten, gegen Overfitting vorzugehen, mit denen in dieser Arbeit aber nicht experimentiert wird, sind eine Erhöhung der Dropout-Rate und dem L2 Regularisierungsfaktor.
