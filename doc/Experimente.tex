@@ -188,7 +188,22 @@
 		\end{figure} 
 	
 	\section{Segmentierung von Punktwolken}
-		In diesem Abschnitt sollen die 
+		In diesem Abschnitt sollen die Ergebnisse der Punktwolkensegmentierung diskutiert werden. Wie bereits erwähnt, werden die Experimente auf LiDAR-Daten des KITTI-Datensatzes durchgeführt. Da diese nicht annotiert sind, werden die Ergebnisse an dieser Stelle nur empirisch ausgewertet. In diesem Experiment wird das Model C aus dem letzten Abschnitt verwendet, das 24 Epochen auf einer Mischung aus Cityscapes- und KITTI-Daten und eine Epoche nur auf KITTI-Daten trainiert ist und die höchste IoU-Bewertung auf den KITTI-Bildern erzielt. In Abbildung \ref{fig:BspPWX1} und \ref{fig:BspPWX2} sind zwei Beispiele für segmentierte Punktwolken analog zu Abbildung \ref{fig:BspPW} gezeigt.\\
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[width=15cm]{img/BspPWSeg1.png}
+			\caption{Beispiel für segmentierte Punktwolken. Zu sehen sind von oben nach unten: Originalbild, segmentiertes Bild, segmentierte Punktwolke aus vier verschiedenen Perspektiven. Gezeigt ist eine Szene, in der mehrere Fahrzeuge auf einer dreispurigen Straße an eine rote Ampel heranfahren. Im Hintergrund ist Vegetation. Die Segmentierung der Straße und Autos in der Punktwolke ist weitgehend Korrekt. Die Lastwägen werden im unteren Teil als Autos, im oberen als Gebäude oder Vegetation klassifiziert.}
+			\label{fig:BspPWX1}
+		\end{figure}
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[width=15cm]{img/BspPWSeg2.png}
+			\caption{Beispiel für segmentierte Punktwolken. Zu sehen sind von oben nach unten: Originalbild, segmentiertes Bild, segmentierte Punktwolke aus vier verschiedenen Perspektiven. Gezeigt ist eine Szene an einer Kreuzung mit vielen Pfahl-artigen Objekten. Das filmende Fahrzeug hält an einer roten Ampel, während ein Auto die Kreuzung von links nach rechts durchfährt. Ein weiteres Auto fährt von links in die Bildfläche ein. Die Segmentierung des Autos auf dem Bild weist Fehler im oberen Bereich auf, die auch in der segmentierten Punktwolke wiederzufinden sind. Das nicht gut sichtbare Fahrzeug am linken Rand wird vom Netzwerk nicht korrekt erkannt. Die Pfähle werden in der Punktwolke gut segmentiert, obwohl sie im Bild nur ungenau erkannt werden.}
+			\label{fig:BspPWX2}
+		\end{figure} 
+		Offensichtlich ist die Genauigkeit der Punktwolkensegmentierung abhängig von der Qualität der Bildsegmentierung, was besonders in Abbildung \ref{fig:BspPWX1} deutlich wird. Aufgrund der in Abschnitt \ref{sec:mn2} bestimmten Eigenschaft von MobileNetV2, nur häufig vorkommende Klassen des Trainingssets zu erkennen, werden die Lastwägen im Bild im unteren Bereich als Autos und im oberen Bereich als Mischung aus Gebäuden und Vegetation erkannt, was dann in die Punktwolke projiziert wird.\\
+		Insgesamt zeigen die Beispiele gute Ergebnisse bei zählbaren Objekten im Vordergrund, selbst wenn die Bildsegmentierung in diesen Bereichen nicht sehr präzise ist, wie in Abbildung \ref{fig:BspPWX2}. Die Segmentierung der Pfähle darin ist verschwommen und weist keine klaren Ränder auf. In der Punktwolke führt dies dazu, dass die Objekte selbst richtig und der Hintergrund hinter den Objekten falsch gelabelt wird.\\
+		Hinsichtlich dieser Eigenschaften wäre ein Netz wünschenswert, das die Klasse zählbarer Objekte großzügig verteilt, wodurch diese in den Punktwolken richtig segmentiert werden. Die durch verschwommene Ränder im segmentierten Bild falsch erkannten Punkte in amorphen Objekten fallen im Vergleich zu der Menge an Punkten dieser Klasse nicht ins Gewicht. Dazu kommt, dass diese sich oft im Hintergrund befinden und für praktische Anwendungen von geringerem Interesse sind.
 	
 	\section{Aufgetretene Probleme und Lösungen}
 		\subsection{False Positives}
@@ -202,5 +217,5 @@
 			\end{figure} 
 		\subsection{Overfitting}
 			Overfitting hat sich als eines der hauptsächlichen Probleme bei der Verwendung von MobileNetV2 herausgestellt. Schon kleine Änderungen in der Perspektive, wie sie beispielsweise im KITTI-Datensatz auftritt, verursachen eine spürbare Verschlechterung der Ergebnisse. \\
-			Um bessere Ergebnisse auf dem KITTI-Datensatz zu erzeugen, hat es sich als vorteilhaft herausgestellt, den Trainingssatz für semantische Segmentierung der KITTI-Daten beim Trainieren des Netzes mitzuberücksichtigen. Das Netz mit jenen Daten nachzutrainieren verbessert ebenfalls die Ergebnisse, kann aber wiederum zu Overfitting auf diesen Datensatz führen. Es kann hilfreich sein, nach dem Nachtraining noch eine Epoche mit allen verfügbaren Daten nachzutrainieren. Allgemein wirkt eine hohe Varietät innerhalb der Trainingsdaten vorbeugend.\\
+			Um bessere Ergebnisse auf dem KITTI-Datensatz zu erzeugen, hat es sich als vorteilhaft herausgestellt, den Trainingssatz für semantische Segmentierung der KITTI-Daten beim Trainieren des Netzes mitzuberücksichtigen. Das Netz mit jenen Daten nachzutrainieren verbessert ebenfalls die Ergebnisse, kann aber wiederum zu Overfitting auf diesen Datensatz führen. Es kann hilfreich sein, nach dem Nachtraining noch eine Epoche mit allen verfügbaren Daten nachzutrainieren. Allgemein wirkt sich eine hohe Varietät innerhalb der Trainingsdaten positiv aus.\\
 			Weitere Möglichkeiten, gegen Overfitting vorzugehen, mit denen in dieser Arbeit aber nicht experimentiert wird, sind eine Erhöhung der Dropout-Rate und dem L2 Regularisierungsfaktor.
