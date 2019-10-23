@@ -1,10 +1,7 @@
 \chapter{Experimente}
-	\section{Technische Daten des für die Experimente verwendeten Rechners}
-		\begin{itemize}
-			\item Prozessor: Intel(R) Core(TM) i7-7700HQ CPU @ 2.860GHz
-			\item Grafikkarte: NVIDIA GeForce GTX 1070
-			\item Arbeitsspeicher: 16GB RAM
-		\end{itemize}
+	In diesem Kapitel sollen die im Rahmen der Arbeit durchgeführten Experimente aufgeführt, sowie deren Ergebnisse dargelegt und diskutiert werden. Ziel der Experimente ist es, Praktikenzu ermitteln, die bei der Anwendung des entwickelten Systems vorteilhaft sind und mit denen die bestmöglichen Ergebnisse produziert werden.\\
+	Zunächst soll die Auswirkung des verwendeten Backbones auf die Leistungsfähigkeit des Netzes untersucht werden, wobei sich die Experimente auf MobileNetV2 konzentrieren. Dazu soll zunächst experimentell die ideale Trainingsdauer für die Verwendung von MobileNetV2 ermittelt werden. Anschließend daran wird das so erstellte Model auf einem Evaluierungs-Datensatz ausgewertet. Die Ergebnisse eines Netzes, das Xception65 als Backbone verwendet sollen ebenfalls diskutiert und mit denen von MobileNetV2 bezüglich deren Qualität und notwendiger Rechenzeit verglichen werden.\\
+	Als nächstes soll festgestellt werden, wie gut das Netz unter der Verwendung von MobileNetV2 Bilder aus einem anderen Datensatz verarbeitet und wie sich die Ergebnisse durch Anpassung des Trainingsverhaltens verbessern lassen. Als letztes sollen auf die in Abschnitt \ref{sec:algo} beschriebene Weise segmentierte Punktwolken betrachtet und diskutiert werden. Dabei soll vor allem auf den Zusammenhang zwischen der Qualität der segmentierten Bilder und der der Punktwolken geachtet werden.
 	\section{Backbones}
 		Für die Durchführung folgender Experimente wird der fein annotierte Cityscapes-Datensatz verwendet. Die Netze werden auf dem aus 2975 Bildern bestehenden Trainingssatz trainiert und auf dem 500 Bilder fassenden Validierungssatz ausgewertet.\\
 		Für jede Trainingsepoche werden aus dem Trainingssatz 1487 Bilder zufällig ausgewählt. Als Grundlernrate wird 0.007 gewählt. Der Trainingsfehler wird über die in \cite{Lovasz} beschriebene Lovasz-Funktion berechnet. Weitere Hyperparameter sind eine Dropout-Rate von 0.1,  eine L2 Regularisierungsrate von $4*10^{-5}$ und ein Momentum-Faktor von 0.9.\\
@@ -81,7 +78,7 @@
 			Die Beispiele lassen erkennen, dass das Netz teilweise die Trainingsdaten memorisiert. So wird dem oberen Teil eines Fahrrades häufig die Klasse Person zugewiesen und umgekehrt der untere Teil einer Person als Fahrrad erkannt. Genauso werden Bereiche, die sich über einem als Straße erkannten Segments befinden tendenziell eher als Auto klassifiziert. Das lässt sich auf die Funktion des CRF zurückführen.
 		
 	\subsection{Xeption65}
-		Wir betrachten den Xception65-Backbone im Vergleich zu MobileNetV2. Auf ein Experiment mit unterschiedlichen Trainingsepochen wird an dieser Stelle aufgrund der langen Trainingsdauer der Netze verzichtet. Das verwendete Model ist 60 Epochen lang trainiert mit denselben Hyperparametern wie die Models mit MobileNetV2.
+		Wir betrachten den Xception65-Backbone im Vergleich zu MobileNetV2. Auf ein Experiment mit unterschiedlichen Trainingsepochen wird an dieser Stelle aufgrund der langen Trainingsdauer der Netze verzichtet. Das verwendete Model ist 60 Epochen lang trainiert mit denselben Hyperparametern wie die Models mit MobileNetV2. Da in diesem Experiment die für ein Bild nötige Verarbeitungszeit eine Rolle spielt, soll hier erwähnt werden, dass der Rechner auf dem es durchgeführt wird mit der Grafikkarte NVIDIA GeForce GTX 1070, auf der die Berechnungen durchgeführt werden, ausgestattet ist und über 16GB RAM verfügt. 
 		
 		\begin{table}[h]
 			\centering

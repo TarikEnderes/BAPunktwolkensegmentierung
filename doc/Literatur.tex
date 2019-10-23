@@ -32,6 +32,9 @@
 			Es existieren Ansätze zur Bildsegmentierung mit Neuronalen Netzen, die als schwach überwachtes Lernen bezeichnen werden können. Das Netz erhält dabei Bilder, von denen bekannt ist, ob sich ein bestimmtes Objekt darin befindet oder nicht. Die Idee ist, Objekte die in beiden Arten von Bildern vorkommen als Hintergrund zu erkennen und zu ignorieren. In \cite{10.1007/978-3-642-33863-2_20} wird ein Verfahren vorgestellt, dass mit großen Mengen zufällig ausgewählter, eventuell verrauschter Videos der Plattform YouTube arbeitet. Dabei wird ein Bild nach klassischen Segmentierungsverfahren in Regionen unterteilt. Die einzelnen Regionen werden von einem Netz danach bewertet, mit welcher Wahrscheinlichkeit sie zu dem gelernten Objekt gehören und anhand der Segmente mit hohen Wahrscheinlichkeiten wird, ebenfalls mit klassischen Methoden, eine Maske erstellt, die das gesamt Objekt umfassen soll.\\
 			Wenn an ein Verfahren hohe Anforderungen gestellt werden, wie bei der panoptischen oder Instanz-Segmentierung ist eine überwachte Lern-Methode oft unerlässlich. Für jedes Bild eines Trainingssatzes muss dafür eine Ground Truth zur Verfügung stehen, die das gewünschte Ergebnis des Netzes darstellt. Für Beispiele für diese Art von Verfahren siehe Abschnitt \ref{sec:verArb}.
 			
+		\subsection{DeepLab}
+			Das in \cite{DeepLab1} und \cite{DeepLab2} vorgestellte DeepLab ist ein Framework zur semantischen Bildsegmentierung, das auf Deep Convolutional Neural Networks und Fully Connected Conditional Random Fields basiert. Die derzeit aktuelle Version ist DeepLabV3+ \cite{DBLP:journals/corr/abs-1802-02611}. Für weitere Informationen siehe Abschnitt \ref{sec:dl}.
+			
 	\section{Verwandte Arbeiten} \label{sec:verArb}
 		In diesem Abschnitt wird auf vorhandene Arbeiten eingegangen, die sich mit der Problematik der Segmentierung von Bildern oder Punktwolken mit neuronalen Netzen befassen. 
 		\subsection{PointNet}

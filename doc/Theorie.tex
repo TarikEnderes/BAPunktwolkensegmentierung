@@ -65,6 +65,7 @@
 	
 			
 	\section{Kamerakalibrierung}
+	\label{sec:cam}
 		Eine Kamera ermöglicht es, ein dreidimensionales Objekt auf eine zweidimensionale Ebene zu projizieren. Diese Projektion kann, wie in \cite{Hartley} beschrieben, mit dem in Abbildung \ref{fig:Proj} dargestellten Modell angenähert werden, in dem von Punkten im dreidimensionalen Raum ein Strahl durch einen bestimmten Fixpunkt, das Projektionszentrum, verläuft und dabei eine vorgegebene Ebene, die Bildebene, schneidet. Der Schnittpunkt dieses Strahls mit der Bildebene entspricht dem projizierten Punkt auf dem entstehenden Bild.\\
 		\begin{figure}
 			\centering
@@ -75,11 +76,11 @@
 		Offensichtlich werden alle Punkte im dreidimensionalen Raum, die auf einem Strahl durch das Projektionszentrum liegen, auf denselben Punkt in der Bildebene projiziert. Das Bild lässt sich also praktisch als eine Menge von Strahlen auffassen.\\
 		Ist eine Kamera kalibriert, ist es möglich, aus zwei Punkten auf einem damit aufgenommenen Bild den Winkel zwischen den beiden Strahlen zu bestimmen, durch die sie entstanden sind. Analog dazu kann beispielsweise aus dem Bild auf die Größe einer fotografierten Fläche geschlossen werden oder bestimmt werden, ob eine Ellipse auf dem Bild die Projektion eines Kreises ist. Um solche Berechnungen anzustellen sind zusätzliche Informationen notwendig, da bei der Kameraprojektion Informationen über Entfernungen, Längen, Winkel, Verhältnisse und dementsprechend Formen nicht erhalten bleiben.\\
 		Dass eine Kamera kalibriert ist, bedeutet im Praktischen Sinn, dass eine Matrix $P$ berechenbar ist, für die gilt:
-		\begin{equation}
+		\begin{equation} \label{eq:proj}
 			zm = PM.
 		\end{equation}
-		$M$ bezeichnet dabei die homogenen Koordinaten eines Punktes im dreidimensionalen Raum und $m$ diejenigen von dessen Projektion auf der Bildebene, $z$ ist ein reeller Faktor. Homogene Koordinaten unterscheiden sich von Euklidischen durch einen Zusätzlichen Parameter, der oft mit $T$ bezeichnet wird. Eine Koordinate im zweidimensionalen Raum hat also die Form: $(X,Y,Z,T)^T$. Es gilt dabei, dass der Punkt $(x,y,1)$ in homogenen Koordinaten äquivalent ist zum Punkt $(x,y)$ in euklidischen Koordinaten. Es gilt also:
-		\begin{equation}
+		$M$ bezeichnet dabei die homogenen Koordinaten eines Punktes im dreidimensionalen Raum und $m$ diejenigen von dessen Projektion auf der Bildebene, $z$ ist ein reeller Faktor ungleich Null. Homogene Koordinaten unterscheiden sich von Euklidischen durch einen Zusätzlichen Parameter, der oft mit $T$ bezeichnet wird. Eine Koordinate im zweidimensionalen Raum hat also die Form: $(X,Y,Z,T)^T$. Es gilt dabei, dass der Punkt $(x,y,1)$ in homogenen Koordinaten äquivalent ist zum Punkt $(x,y)$ in euklidischen Koordinaten. Es gilt also:
+		\begin{equation} \label{eq:eukhom}
 		\left(
 			\begin{array}{c}
 				x\\y
@@ -91,7 +92,7 @@
 		\right)
 		\end{equation}
 		Für homogene Koordinaten mit $T \neq 0$ verhält es sich für alle $k \neq 0$ so, dass:
-		\begin{equation}
+		\begin{equation} \label{eq:hom}
 			\left(
 			\begin{array}{c}
 			x\\y\\\omega
@@ -103,7 +104,7 @@
 			\right)
 		\end{equation}
 		Eine Umrechnung in euklidische Koordinaten erfolgt folglich durch:
-		\begin{equation}
+		\begin{equation} \label{eq:homeuk}
 			\left(
 			\begin{array}{c}
 			x\\y\\\omega
@@ -115,7 +116,7 @@
 			\right)
 		\end{equation}
 		Ein Punkt, in dem $T = 0$ gilt, bezeichnet man als "`Punkt im Unendlichen"'. Was hier beispielhaft für zwei Dimensionen dargestellt ist, kann offensichtlich für beliebig viele Dimensionen erweitert werden. Für weitere Informationen über homogene Koordinaten siehe \cite{Hartley}.\\
-		Kenntnis über die so genannte Projektions- oder Kameramatrix $P$ ermöglicht also die Berechnung der zum Projektionszentrum relativen Koordinaten des projizierten Punktes aus denen des aufgenommenen Punktes und umgekehrt. Offensichtlich kann damit berechnet werden, wo ein mit einer kalibrierten Kamera aufgenommener Punkt im Bild einer anderen erscheint.
+		Kenntnis über die so genannte Projektions- oder Kameramatrix $P$ ermöglicht also die Berechnung der zum Projektionszentrum relativen Koordinaten des projizierten Punktes aus denen des aufgenommenen Punktes im dreidimensionalen Raum. Außerdem kann damit berechnet werden, wo ein mit einer kalibrierten Kamera aufgenommener Punkt im Bild einer anderen erscheint.
 		Zum Ermitteln der Projektionsmatrix sind, wie in \cite{Fusiello06elementsof} beschrieben, folgende Informationen notwendig:
 		\begin{itemize}
 			\item Die Entfernung $f$ zwischen dem Projektionszentrum und der Bildebene.
@@ -136,5 +137,5 @@
 		\end{equation}
 		Ist die Kalibrierungsmatrix bekannt, muss noch die Position der Kamera durch die Rotationsmatrix $R$ und den Translationsvektor $t$ ausgedrückt werden. Dann kann die Projektionsmatrix berechnet werden mittels:
 		\begin{equation}
-			P = K\left[R|T\right]
+			P = K\left[R|t\right]
 		\end{equation}
