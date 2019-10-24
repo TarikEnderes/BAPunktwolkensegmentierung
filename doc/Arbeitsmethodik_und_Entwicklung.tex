@@ -1,9 +1,9 @@
 \chapter{Arbeitsmethodik und Entwicklung}
 	\section{Algorithmus}
 		\label{sec:algo}
-		Es gibt mehrere Ansätze zum Segmentieren von Punktwolken mit Neuronalen Netzen, die unterschiedliche Leistungen bezüglich Laufzeit und Qualität erzielen. In dieser Arbeit wird ein möglichst einfacher und zeiteffizienter Algorithmus angewandt. Dabei wird, wie in Abbildung \ref{fig:Verfahren} dargestellt, zuerst ein Eingabebild mit Hilfe neuronaler Netze semantisch segmentiert. Dazu wird an dieser Stelle DeepLabV3+ benutzt, da es mit seinen Ergebnissen auf populären Datensätzen (79.7\% auf Pascal VOC 2012 und 70.4\% auf Cityscapes in mIOU-Metrik) laut \cite{DeepLab2}, als State-of-the-Art angesehen wird und gleichzeitig eine große Fülle an Informationen und öffentlichen Implementierungen zur Verfügung stehen. \\
+		Es gibt mehrere Ansätze zum Segmentieren von Punktwolken mit Neuronalen Netzen, die unterschiedliche Leistungen bezüglich Laufzeit und Qualität erzielen. In dieser Arbeit wird ein möglichst einfacher und zeiteffizienter Algorithmus angewandt. Dabei wird, wie in Abbildung \ref{fig:Verfahren} dargestellt, zuerst ein Eingabebild mit Hilfe neuronaler Netze semantisch segmentiert. Dazu wird an dieser Stelle DeepLabV3+ \cite{DBLP:journals/corr/abs-1802-02611} benutzt, da es mit seinen Ergebnissen auf populären Datensätzen (79.7\% auf Pascal VOC 2012 \cite{Everingham10} und 70.4\% auf Cityscapes \cite{Cityscapes} in mIOU-Metrik) laut \cite{DeepLab2}, als State-of-the-Art angesehen wird und gleichzeitig eine große Fülle an Informationen und öffentlichen Implementierungen zur Verfügung stehen. \\
 		Die durch die Segmentierung ermittelten Labels werden anschließend auf eine Punktwolke projiziert, die dieselbe Szene wie das segmentierte Bild darstellt. Dazu werden ein Bild und eine Punktwolke der zu segmentierenden Szene, sowie eine Projektionsmatrix benötigt. die verwendete Kamera muss also kalibriert sein. Offensichtlich ist es damit nur möglich, den Bereich der Punktwolke zu segmentieren, der im Bild zu sehen ist. Außerdem werden auf diese Weise keine in der Punktwolke vorhandenen Tiefen-Information ausgenutzt. Stattdessen können Farb-Informationen berücksichtigt werden.
-		\begin{figure}
+		\begin{figure}[h]
 			\centering
 			\includegraphics[width = 1\linewidth]{img/Verfahren.png}
 			\caption{Schematische Arbeitsweise des Systems. Ein Eingabebild wird zunächst mit DeepLab segmentiert. Die so entstandenen Labels werden unter Verwendung einer Projektionsmatrix auf eine zum Eingabebild gehörende Punktwolke projiziert.}
@@ -12,7 +12,7 @@
 	\section{DeepLab} \label{sec:dl}
 		DeepLab ist ein von Google entwickeltes, 2015  in \cite{DeepLab1} vorgestelltes Modell für semantische Segmentierung. Bei der in \cite{DeepLab2} vorgestellten Methode wird ein Deep Convolutional Neural Network (DCNN) zum Erzeugen einer Score Map benutzt, die anschließend mit einem Conditional Random Field (CRF) zur endgültigen Ausgabe weiterverarbeitet wird. Das Verfahren wird in Abbildung \ref{fig:DeepLabAblauf} grob dargestellt.
 		
-		\begin{figure}
+		\begin{figure}[h]
 			\centering
 			\includegraphics[width = 0.9\linewidth]{img/DeepLabAblauf.png}
 			\caption{Arbeitsfluss von DeepLab nach \cite{DeepLab2}. Das Eingabebild wird von einem DCNN segmentiert. Das Ergebnis wird durch Bilineare Interpolation auf die Größe der Eingabe vergrößert und in einem Fully Connected CRF raffiniert.}
@@ -36,7 +36,7 @@
 		Als Basis für die Integration von DeepLab dient eine öffentlich zugänglichen Implementierung in Python mit dem Pytorch-Framework. \\
 		Das Projekt implementiert die zwei Netzwerke Xception65 und MobileNetV2. Es wird die Möglichkeit angeboten, vor-trainierte Encoder zu verwenden, die in dieser Arbeit aber nicht genutzt wird, da derzeit Kompatibilitätsprobleme mit den bereitgestellten vor-trainierten MobileNetV2-Models auftreten. Neben den bereits beschriebenen Technologien werden die klassischeren Konzepte der Neuroinformatik Dropout, L2-Regularisierung und Momentum verwendet.\\
 		Bezüglich der Entwicklung ist das erste Ziel die Verwendung dieses Projekts mit einem vor-trainierten Model zur Evaluierung frei gewählter Bilder. Ein Model bezeichnet im Rahmen dieser Arbeit eine Datei, in der vom Netz gelernte Parameter gespeichert sind und bei Bedarf geladen werden können. Die ursprüngliche Implementierung erwartet Test- und Trainingsdaten im Format von entweder Cityscapes oder Pascal. Der erste Schritt ist folglich die Erstellung eines Python-Skripts zur Evaluierung beliebiger Bilder. Dieses Skript soll Ausgaben im PNG-Format erzeugen, die das Originalbild, die Auswertung des Netzes, eine Legende, ein RGP-Histogramm und die erforderte Rechendauer zeigen. Zur Erzeugung der Plots wird das Modul Matplotlib verwendet. Für den Fall, dass die Eingabebilder einen schwarzen Rand aufweisen, wird dieser Rand auf die segmentierten Bilder übertragen, wozu das Bildverarbeitungs-Framework OpenCV verwendet wird. Die Legende wird automatisch erstellt und richtet sich nach der Klasse mit dem höchsten Label, die in dem Eingabebild erkannt wurde. Sie zeigt außerdem den IoU-Wert jeder Klasse. Das RGB-Histogramm wird mit einer Funktion von OpenCV automatisch erstellt. Ein Beispiel ist in Abbildung \ref{fig:BspPr} dargestellt.\\
-		\begin{figure}[h]
+		\begin{figure}[h!]
 			\centering
 			\includegraphics[width=15cm]{img/BeispielErgebnis.png}
 			\caption{Beispiel für die Ausgabe des Evaluierungs-Skripts. Zu sehen ist das Eingabebild (oben links), das segmentierte Bild (oben rechts), eine Legende, die den IoU für jede Klasse enthält (unten links) und ein RGB-Farbhistogramm (unten rechts). Die Rechenzeit des Netzes und der durchschnittliche IoU werden über dem segmentierten Bild angezeigt.}
@@ -63,7 +63,7 @@
 		Wie bereits erwähnt, wird der Begriff Backbone hier als Synonym für Feature Extractor verwendet und bezeichnet ein Netz, das ein Bild als Eingabe erhält und eine Feature Map erzeugt. Die hier verwendete Implementierung von DeepLab umfasst zwei Backbones: Xception65 und MobileNetV2.
 		\subsection{Xecption}
 			Das in \cite{Xception} präsentierte Xception-Netzwerk ist ein einfaches aber leistungsfähiges DCNN, das auf der Idee von Depthwise Separable Convolution basiert. Es wird also angenommen, dass Korrelationen, die mehrere Kanäle umfassen von räumlichen Korrelationen entkoppelt werden können. Die einzelnen Module des Netzes verarbeiten zunächst alle Kanäle separat und führen dann eine einfache Faltung über alle Dimensionen durch. Dadurch werden Laufzeit- und Speichereffizienz verbessert. Das Prinzip ist in Abbildung \ref{fig:SepConv} dargestellt.\\
-			\begin{figure}[h]
+			\begin{figure}[h!]
 				\centering
 				\includegraphics[width=15cm]{img/SeparableConvolution.png}
 				\caption{Schematische Darstellung des Prinzip von Depthwise Separable Convolution zur Tensorverarbeitung nach \cite{MobileNetV2}. Statt einer Faltung mit einem 3x3-Kernel über alle Dimensionen, wird für jede Dimension eine Faltung mit einem 3x3-Kernel durchgeführt, gefolgt von einer Faltung mit einem 1x1-Kernel über alle Dimensionen.}
@@ -76,9 +76,9 @@
 			
 	\section{Segmentierung von Punktwolken}
 		Wie in Abschnitt \ref{sec:cam} beschrieben, ist es durch Kenntnis einer Projektionsmatrix möglich zu berechnen, wo ein Punkt im dreidimensionalen Raum auf einem aufgenommenen Bild erscheint. Ist eine solche Matrix für die jeweilige Kamera bekannt, wird diese als kalibriert bezeichnet. \\Zur Projektion der auf dem Bild erkannten Klassen auf die Punktwolke iteriert ein Algorithmus durch alle Punkte und berechnet durch Anwendung von Gleichung \ref{eq:proj} einen Vektor bestehend aus den homogenen Koordinaten des projizierten Punktes. Die Komponenten dieses Vektors werden im Folgenden, analog zur Bezeichnung in Gleichung \ref{eq:homeuk}, mit $x$, $y$ und $\omega$ bezeichnet. Für alle so berechneten Vektoren, deren $\omega$-Komponente positiv ist, andernfalls befände sich der entsprechende Punkt in der Punktwolke hinter der Bildebene, werden deren euklidische Koordinaten mittels Gleichung \ref{eq:homeuk} ermittelt und überprüft, ob sie sich im Bild befinden. Ist dies der Fall, wird dem entsprechenden Punkt in der Punktwolke das Label zugewiesen, das an den berechneten Koordinaten im Bild bei der Segmentierung erkannt wurde. Befindet sich der berechnete Punkt auf der Bildebene nicht innerhalb des Bildes, bedeutet das, dass sich der jeweilige Punkt im dreidimensionalen Raum nicht im Sichtfeld der Kamera befand und folglich nicht auf dem Bild erscheint. Offensichtlich kann der in dieser Arbeit vorgestellte Algorithmus keine Aussagen über solche Punkte machen.\\
-		Der KITTI-Datensatz bietet sowohl Aufnahmen von kalibrierten Farbkameras, als auch Laserscans in Form von Punktwolken im Velodyne-Format und eine, wenn auch verhältnismäßig geringe, Menge an fein-annotierten Bildern für semantische Segmentierung. Das macht ihn zu einer logischen Wahl für die Generierung von Beispielergebnissen im Rahmen dieser Arbeit.\\
+		Der KITTI-Datensatz \cite{KITTI} bietet sowohl Aufnahmen von kalibrierten Farbkameras, als auch Laserscans in Form von Punktwolken im Velodyne-Format und eine, wenn auch verhältnismäßig geringe, Menge an fein-annotierten Bildern für semantische Segmentierung. Das macht ihn zu einer logischen Wahl für die Generierung von Beispielergebnissen im Rahmen dieser Arbeit.\\
 		Für die Implementierung bietet sich das für KITTI entwickelte Python-Modul Pykitti an, das Funktionen zur Verwaltung der Bild- und Velodyne-Daten und zum Umrechnen der Koordinaten anhand der Projektionsmatrizen anbietet. Für die Visualisierung der Ergebnisse wird eine Python-Integration von Mayavi verwendet. Abbildung \ref{fig:BspPW} zeigt ein Beispiel.
-		\begin{figure}[h]
+		\begin{figure}[h!]
 			\centering
 			\includegraphics[width=15cm]{img/BeispielPWSegmentierung.png}
 			\caption{Beispiel für segmentierte Punktwolke aus dem KITTI-Datensatz. Zu sehen ist von oben nach unten: Originalbild, Ergebnis von DeepLab, segmentierte Punktwolke aus verschiedenen Perspektiven.}

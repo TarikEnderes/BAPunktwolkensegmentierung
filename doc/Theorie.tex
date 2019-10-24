@@ -9,7 +9,7 @@
 	\section{Atrous Convolution}
 		Atrous Convolution, auch Dilated Convolution genannt, beschreibt eine Technik bei der eine Matrix mit einem spärlich bestückten Kernel gefaltet wird, wie in Abbildung \ref{fig:AtrousConv} illustriert.
 		
-		\begin{figure}
+		\begin{figure}[h!]
 			\centering
 			\includegraphics[width=15cm]{img/AtrousConv.png}
 			\caption{Prinzip von Atrous Convolution. Das Vorgehen bei der Faltung ist beispielhaft bei einer Erweiterungsrate von zwei dargestellt. Der Wert an der eingefärbten Stelle der Ausgabematrix (rechts) hängt von denen an den eingefärbten Stellen der Eingabematrix (links) ab, statt, wie bei einer herkömmlichen zweidimensionalen Faltung, von benachbarten. Die roten Strahlen markieren die Ecken des Sichtfelds.}
@@ -17,7 +17,7 @@
 		\end{figure} 
 		Die Abstände der zu berücksichtigenden Werte in der Matrix wird dabei durch die so genannte Dilation Rate bzw. Erweiterungsrate festgelegt. Das Tatsächliche Sichtfeld des Filters wird also durch die Größe des Kernels und die Rate bestimmt.\\ ein Filter mit einem Kernel der Größe 3x3 und einer Rate von 2, was dem Einfügen einer leeren Zeilen und Spalte zwischen den Werten entspricht, hat demnach ein Sichtfeld der Größe 5x5.
 		Dadurch wird das effektive Sichtfeld des Filters erhöht und es kann eine höhere Auflösung bei gleichen Rechenaufwand erreicht werden. Vor allem kann Downsampling damit vermieden werden. Die Vorteile der Verwendung von Atrous Convolution für Bildsegmentierung sind in Abbildung \ref{fig:AtrousConvRes} dargestellt.
-	\begin{figure}
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width = 0.9\linewidth]{img/AtrousConvRes.png}
 		\caption{Beispielhaft dargestellte Vorteile von Atrous Convolution nach \cite{DeepLab2}. In der oberen Reihe ist das übliche Vorgehen bei CNNs dargestellt, in dem durch Down- und Upsampling die Effizienz verbessert wird. Der Vorgang entspricht einer Faltung mit erhöhter Schrittgröße. Unten dargestellt ist die Anwendung von Atrous Convolution mit einer Schrittgröße von eins und Erweiterungsrate zwei. Ein Vergleich der Ergebnisse der beiden Algorithmen zeigt, dass die Ausgabe von Atrous Convolution eine höhere Auflösung aufweist.}
@@ -28,7 +28,7 @@
 		Beim Atrous Spatial Pyramid Pooling werden, wie in \cite{DeepLab2} beschrieben, mehrere parallele Convolutional Layers, die Atrous Convolutional Layers mit unterschiedlicher Erweiterungsrate verwenden, in das DCNN eingebaut. Aus den Ergebnissen der Verarbeitungszweige wird ein Tensor gebildet, der anschließend einer Dimension-übergreifenden 1x1 Faltung unterzogen wird, um die endgültigen Wahrscheinlichkeiten zu berechnen. Das Prinzip ist in Abbildung \ref{fig:PyramPooling} dargestellt.
 		Durch dieses Vorgehen soll Größeninvarianz erreicht werden.\\
 		
-		\begin{figure}
+		\begin{figure}[h!]
 			\centering
 			\includegraphics[width = 12cm]{img/PyramPooling.png}
 			\caption{Prinzip von Atrous Spatial Pyramid Pooling wie in \cite{DeepLab2}. Die Eingabe wird mit verschiedenen Filtern mit unterschiedlicher Erweiterungsrate gefaltet, was dazu führt, dass die Stellen in den Ausgabematrizen verschieden große Sichtfelder aufweisen. Die so entstandene Ergebnisse werden zu einer Feature Map kombiniert.}
@@ -46,7 +46,7 @@
 		Der Lernprozess für CRFs beruht auf Gradient Descend. Da die Wahrscheinlichkeitsfunktion bei eindeutigen Trainingsdaten wegen der Eigenschaften der Exponentialfunktion konvex ist, ist ein lokales Minimum dabei garantiert ein globales. Das Berechnen des Gradienten ist allerdings nicht-trivial und ineffizient, weshalb auf iterative und stochastische Lernalgorithmen, wie das Newtonverfahren zurückgegriffen wird.
 		Wird für die Berechnung eines Wertes der Ausgabe alle Einträge der Eingabe betrachtet, spricht man von einem Fully Connected Conditional Random Field.
 		Für weitere Informationen und eine präzise Definition siehe \cite{CRF}.
-		\begin{figure}
+		\begin{figure}[h!]
 			\centering
 			\includegraphics[width = 0.9\linewidth]{img/CRFRes.png}
 			\caption{CRFs können eingesetzt werden, um die Ergebnisse von CNNs zu raffinieren, wie in \cite{DeepLab1} gezeigt. In der oberen Reihe werden die Score Maps, die Ergebnisse vor Anwendung einer Soft-Max-Funktion, gezeigt, in der unteren die Ausgabe der Soft-Max-Funktion.}
@@ -55,7 +55,7 @@
 	
 	\section{Residual Networks}
 		Ein Residual Neural Networks (ResNet) ist ein neuronales Netz, das das in \cite{DBLP:journals/corr/HeZRS15} vorgestellte Residual Learning implementiert. Dabei werden, wie in \ref{fig:ResNet} dargestellt, "`Abkürzungen"' in das Netz eingebaut, über die die Ausgabewerte einer Schicht eine oder mehrere nachfolgende Schichten überspringen und eine tiefere Schicht unverändert erreichen und mit den Ergebnissen der übersprungenen Schichten addiert werden.\\
-		\begin{figure}
+		\begin{figure}[h!]
 			\centering
 			\includegraphics[width=7cm]{img/ResNet.png}
 			\caption{Prinzip von Residual Learning nach \cite{DBLP:journals/corr/HeZRS15}. Über spezielle Abkürzungs-Schichten werden Daten unverändert in weiter darunter liegende Schichten geleitet und auf deren Ausgabe addiert.}
@@ -67,9 +67,9 @@
 	\section{Kamerakalibrierung}
 	\label{sec:cam}
 		Eine Kamera ermöglicht es, ein dreidimensionales Objekt auf eine zweidimensionale Ebene zu projizieren. Diese Projektion kann, wie in \cite{Hartley} beschrieben, mit dem in Abbildung \ref{fig:Proj} dargestellten Modell angenähert werden, in dem von Punkten im dreidimensionalen Raum ein Strahl durch einen bestimmten Fixpunkt, das Projektionszentrum, verläuft und dabei eine vorgegebene Ebene, die Bildebene, schneidet. Der Schnittpunkt dieses Strahls mit der Bildebene entspricht dem projizierten Punkt auf dem entstehenden Bild.\\
-		\begin{figure}
+		\begin{figure}[h!]
 			\centering
-			\includegraphics[width=15cm]{img/Projektion.png}
+			\includegraphics[width=13cm]{img/Projektion.png}
 			\caption{Prinzip einer Lochkamera zur Projektion vom dreidimensionalen in den zweidimensionalen Raum nach \cite{Fusiello06elementsof}. Von einem realen Punkt $M$ verläuft ein Strahl durch das Projektionszentrum C und schneidet die Bildebene im Bildpunkt $m$. Das Koordinatensystem ist so gewählt, dass sich $C$ im Ursprung befindet und die Y-Achse parallel zur Bildebene verläuft. Die Z-Achse schneidet die Bildebene im Bildzentrum $P$. Hat $M$ die Entfernung $z$ auf der Z-Achse und $y$ auf der Y-Achse und der Abstand zwischen $C$ und der Bildebene ist $f$, so Beträgt die Entfernung von $m$ zur Z-Achse $\frac{fy}{z}$.}
 			\label{fig:Proj}
 		\end{figure}
