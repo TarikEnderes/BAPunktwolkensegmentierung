@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="239.00299mm"
-   height="80.850075mm"
-   viewBox="0 0 239.00299 80.850075"
+   width="477.88181mm"
+   height="160.14372mm"
+   viewBox="0 0 477.8818 160.14372"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
@@ -186,9 +186,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="306.81693"
-     inkscape:cy="192.67528"
+     inkscape:zoom="0.7"
+     inkscape:cx="797.88456"
+     inkscape:cy="120.60601"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -217,9 +217,10 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-9.0126906,-37.079335)">
+     transform="translate(-9.0126897,42.214311)">
     <g
-       id="g2692">
+       id="g2692"
+       transform="matrix(1.9994804,0,0,1.9807491,-9.0080075,-115.65917)">
       <g
          transform="translate(17.639789,2.3835531)"
          id="g839">
@@ -299,52 +300,61 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="25.123335"
-       y="45.500313"
-       id="text2696"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.63708878px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.52654535"
+       x="41.032051"
+       y="-25.654909"
+       id="text2696"
+       transform="scale(1.0047172,0.99530496)"><tspan
          sodipodi:role="line"
          id="tspan2694"
-         x="25.123335"
-         y="45.500313"
-         style="stroke-width:0.26458332">Eingabebild</tspan></text>
+         x="41.032051"
+         y="-25.654909"
+         style="stroke-width:0.52654535">Eingabebild</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="127.20013"
-       y="42.20129"
-       id="text2696-2"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.63708878px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.52654535"
+       x="244.17433"
+       y="-32.220276"
+       id="text2696-2"
+       transform="scale(1.0047172,0.99530496)"><tspan
          sodipodi:role="line"
          id="tspan2718"
-         x="128.08069"
-         y="42.20129">Segmentiertes </tspan><tspan
+         x="245.92674"
+         y="-32.220276"
+         style="stroke-width:0.52654535">Segmentiertes </tspan><tspan
          sodipodi:role="line"
          id="tspan2720"
-         x="127.20013"
-         y="50.13879">Bild</tspan></text>
+         x="244.17433"
+         y="-16.423916"
+         style="stroke-width:0.52654535">Bild</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="219.55292"
-       y="42.20129"
-       id="text2696-2-5"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.63708878px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.52654535"
+       x="427.96497"
+       y="-32.220276"
+       id="text2696-2-5"
+       transform="scale(1.0047172,0.99530496)"><tspan
          sodipodi:role="line"
          id="tspan2755"
-         x="219.55292"
-         y="42.20129">Segmentiertes</tspan><tspan
+         x="427.96497"
+         y="-32.220276"
+         style="stroke-width:0.52654535">Segmentiertes</tspan><tspan
          sodipodi:role="line"
          id="tspan2757"
-         x="219.55292"
-         y="50.13879">Punktwolke</tspan></text>
+         x="427.96497"
+         y="-16.423916"
+         style="stroke-width:0.52654535">Punktwolke</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="158.08093"
-       y="92.447952"
-       id="text2696-2-1"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.63708878px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.52654535"
+       x="305.63"
+       y="67.775238"
+       id="text2696-2-1"
+       transform="scale(1.0047172,0.99530496)"><tspan
          sodipodi:role="line"
          id="tspan2769"
-         x="158.08093"
-         y="92.447952">Punktwolke</tspan></text>
+         x="305.63"
+         y="67.775238"
+         style="stroke-width:0.52654535">Punktwolke</tspan></text>
   </g>
 </svg>
