@@ -144,7 +144,7 @@
 		Wie man sieht, tritt bei den Ergebnissen auf dem KITTI-Datensatz bereits nach einer Epoche Verfeinerung mit KITTI-Daten eine deutliche Verbesserung auf. Weitere Trainingsepochen verbessern die Ergebnisse weiter, aber weniger erheblich. Gleichzeitig verschlechtert sich die Ausgabe für ein Bild aus dem Cityscapes-Datensatz in ähnlichem Maße. \\Das unterste Bild von Abbildung \ref{fig:Verf} zeigt die Ausgabe eines Models, das für 25 Epochen auf Cityscapes-Daten trainiert, für 5 Epochen mit KITTI-Daten verfeinert und anschließend für eine Epoche mit Cityscapes-Daten nachtrainiert ist. Wie man sieht, führt die Verfeinerung mit dem ursprünglichen Datensatz wieder zu einer Verschlechterung der Ergebnisse auf KITTI-Bildern und einer Verbesserung auf Cityscapes-Bildern.\\
 		Diese Beobachtungen bestärken die Vermutung, dass beim Trainieren des Netzes Overfitting auftritt.\\
 		
-		In einem nächsten Schritt soll untersucht werden, wie die Berücksichtigung der KITTI-Daten beim gesamten Lernprozess die Ergebnisse auf beiden Datensätzen beeinflusst. Dazu wird der annotierte KITTI-Datensatz geteilt in einen Trainings- und Evaluierungssatz zu je 100 Bildern. Dadurch wird es möglich, eine Aussagekräftige Bewertung in IoU-Metrik zu berechnen. Aufbauend auf dem vorherigen Experiment wird ein Model mit gemischten Daten für 24 Epochen trainiert (B) und ausgewertet. Danach wird es für eine Epoche ausschließlich mit KITTI-Daten verfeinert (C) und dann für eine weitere Epoche mit dem gesamten, gemischten Trainingssatz nachtrainiert (D). Damit ist das letzte Model 25 Epochen auf den gemischten Daten trainiert und hat damit genauso viele Lernschritte auf Cityscapes-Bilder absolviert wie das am besten Bewertete Model von Abschnitt \ref{sec:mn2} (A). Die Ergebnisse sind in Tabelle \ref{res:mix} eingetragen und in Abbildung \ref{fig:Verg} graphisch dargestellt. 
+		In einem nächsten Schritt soll untersucht werden, wie die Berücksichtigung der KITTI-Daten beim gesamten Lernprozess die Ergebnisse auf beiden Datensätzen beeinflusst. Dazu wird der annotierte KITTI-Datensatz geteilt in einen Trainings- und Evaluierungssatz zu je 100 Bildern. Dadurch wird es möglich, eine Aussagekräftige Bewertung in IoU-Metrik zu berechnen. Aufbauend auf dem vorherigen Experiment wird ein Model mit gemischten Daten für 24 Epochen trainiert (B) und ausgewertet. Danach wird es für eine Epoche ausschließlich mit KITTI-Daten verfeinert (C) und dann für eine weitere Epoche mit dem gesamten, gemischten Trainingssatz nachtrainiert (D). Damit ist das letzte Model 25 Epochen auf den gemischten Daten trainiert und hat damit genauso viele Lernschritte auf Cityscapes-Bilder absolviert wie das am besten Bewertete Model von Abschnitt \ref{sec:mn2} (A). Die Ergebnisse sind in Tabelle 6.3 eingetragen und in Abbildung \ref{fig:Verg} graphisch dargestellt. 
 		 
 		\begin{table}
 			\centering
@@ -166,7 +166,7 @@
 		\begin{figure}[h!]
 			\centering
 			\includegraphics[width=12cm]{img/VergleichCK.png}
-			\caption{Graphische Darstellung der Ergebnisse von Tabelle \ref{res:mix}. Besonders auffällig sind die Unterschiede bei den Ergebnissen auf den KITTI-Daten (rot) und der Einbruch bei denen der Cityscapes-Bilder (blau) in Model C.}
+			\caption{Graphische Darstellung der Ergebnisse von Tabelle 6.3. Besonders auffällig sind die Unterschiede bei den Ergebnissen auf den KITTI-Daten (rot) und der Einbruch bei denen der Cityscapes-Bilder (blau) in Model C.}
 			\label{fig:Verg}
 		\end{figure} 
 		
