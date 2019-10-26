@@ -35,7 +35,7 @@
 			\label{fig:PyramPooling}
 		\end{figure} 
 	\section{Conditional Random Fields}
-		Ein Conditional Random Field (CRF)  ist ein Modell, das eine Datensequenz erhält und eine Sequenz gleicher Länge und Art ausgibt. CRFs werden zur Segmentierung und zum Labeln genutzt. Das Modell setzt, wie in \cite{CrfIntro} und \cite{McCallum:2002:EIF:2100584.2100633} beschrieben, überwachtes Lernen ein, um Parameter für eine Distribution zu bestimmen, die die Verteilung $d(X|Y)$ beschreibt, wobei $X$ und $Y$ Zufallsvariablen sind. $X$ beschreibt die beobachtete Eingabesequenz, $Y$ die zu bestimmende Ausgabesequenz.\\
+		Ein Conditional Random Field (CRF)  ist ein Modell, das wie in \cite{CrfIntro} und \cite{McCallum:2002:EIF:2100584.2100633} beschrieben, überwachtes Lernen einsetzt, um Parameter für eine Distribution zu bestimmen, die die Verteilung $d(X|Y)$ beschreibt, wobei $X$ und $Y$ Zufallsvariablen sind. $X$ beschreibt die beobachtete Eingabesequenz, $Y$ die zu bestimmende Ausgabesequenz. CRFs eignen sich zum Berechnen von Labels und finden häufig Anwendung bei der Verbesserung der Ergebnisse von Segmentierverfahren.\\
 		Man betrachte eine Familie von Distributionen $p(z)$ und eine Menge von Feature-Funktionen $\phi_1,...,\phi_N$, die alle Daten ausdrücken, die in dem Modell berücksichtigt werden sollen. Es soll nun eine Sammlung von Parametern $\omega$ gefunden werden, sodass durch $p(y|x,\omega)$ die reale Verteilung $d(y|x)$ möglichst gut angenähert wird. $p$ soll dabei so gewählt werden, dass dessen Entropie $H(p)$ maximal ist. Modelliert man, was in der Regel der Fall ist, $p$ als Markov-Kette erster Ordnung, heißt, man nimmt an, dass vergangene Zustände den Ausgangszustand nicht beeinflussen, hat die Distribution mit maximaler Entropie die Form:
 		\begin{equation}
 			p(z) = \frac{1}{Z}\exp(\sum_{i}\omega_i\phi_i(z))
@@ -43,8 +43,8 @@
 		mit einem festen Normalisierungsfaktor $Z$.
 		\\
 		Idealerweise wird für eine Eingabesequenz $x$ eine Ausgabesequenz $y$ so gewählt, dass $p(y|x)$ nach dem berechneten Random Field $p(X|Y)$ maximal wird. Eine naheliegende Möglichkeit ist das "`Ausprobieren"' aller möglichen $y$.Allerdings wäre das für lange Sequenzen zu aufwändig, weshalb in praktischen Anwendungen andere Optimierungsalgorithmen eingesetzt werden. Modelliert man, wie zuvor, $p$ als Markov-Kette, ist eine effiziente Berechnung auf Grundlage des Viterbi-Algorithmus \cite{Ryan:1993:VA:901051} möglich.\\
-		Der Lernprozess für CRFs beruht auf Gradient Descend. Da die Wahrscheinlichkeitsfunktion bei eindeutigen Trainingsdaten wegen der Eigenschaften der Exponentialfunktion konvex ist, ist ein lokales Minimum dabei garantiert ein globales. Das Berechnen des Gradienten ist allerdings nicht-trivial und ineffizient, weshalb auf iterative und stochastische Lernalgorithmen, wie das Newtonverfahren zurückgegriffen wird.
-		Wird für die Berechnung eines Wertes der Ausgabe alle Einträge der Eingabe betrachtet, spricht man von einem Fully Connected Conditional Random Field.
+		Der Lernprozess für CRFs beruht auf \textit{Gradient Descend}. Da die Wahrscheinlichkeitsfunktion bei eindeutigen Trainingsdaten wegen der Eigenschaften der Exponentialfunktion konvex ist, ist ein lokales Minimum dabei garantiert ein globales. Das Berechnen des Gradienten ist allerdings nicht-trivial und ineffizient, weshalb auf iterative und stochastische Lernalgorithmen, wie das Newtonverfahren zurückgegriffen wird.
+		Werden für die Berechnung eines Wertes der Ausgabe alle Einträge der Eingabe betrachtet, spricht man von einem \textit{Fully Connected Conditional Random Field}.
 		Für weitere Informationen und eine präzise Definition siehe \cite{CRF}.
 		\begin{figure}[h!]
 			\centering
@@ -54,23 +54,23 @@
 		\end{figure} 
 	
 	\section{Residual Networks}
-		Ein Residual Neural Networks (ResNet) ist ein neuronales Netz, das das in \cite{DBLP:journals/corr/HeZRS15} vorgestellte Residual Learning implementiert. Dabei werden, wie in \ref{fig:ResNet} dargestellt, "`Abkürzungen"' in das Netz eingebaut, über die die Ausgabewerte einer Schicht eine oder mehrere nachfolgende Schichten überspringen und eine tiefere Schicht unverändert erreichen und mit den Ergebnissen der übersprungenen Schichten addiert werden.\\
+		Ein \textit{Residual Neural Network} (ResNet) ist ein neuronales Netz, das das in \cite{DBLP:journals/corr/HeZRS15} vorgestellte \textit{Residual Learning} implementiert. Dabei werden, wie in \ref{fig:ResNet} dargestellt, "`Abkürzungen"' in das Netz eingebaut, über die die Ausgabewerte einer Schicht eine oder mehrere nachfolgende Schichten überspringen und eine tiefere Schicht unverändert erreichen und mit den Ergebnissen der übersprungenen Schichten addiert werden.\\
 		\begin{figure}[h!]
 			\centering
 			\includegraphics[width=7cm]{img/ResNet.png}
 			\caption{Prinzip von Residual Learning nach \cite{DBLP:journals/corr/HeZRS15}. Über spezielle Abkürzungs-Schichten werden Daten unverändert in weiter darunter liegende Schichten geleitet und auf deren Ausgabe addiert.}
 			\label{fig:ResNet}
 		\end{figure}
-		 Mit ResNets wird ein Problem von Deep Neural Networks gelöst, bei dem der Trainingsfehler durch Hinzufügen zusätzlicher Verarbeitungsschichten vergrößert wird. Wenn nun eine Anzahl von Schichten größer als eins, nicht unbedingt das gesamte Netz, eine beliebige stetige Funktion $H(x)$ approximieren kann, so kann angenommen werden, dass dies auch für eine Funktion $H(x) - x$ gilt. Anstatt zu erwarten, dass $H(x)$ gelernt wird, wird beim Residual Learning explizit eine Funktion $F(x) := H(x) - x$ approximiert. Die ursprüngliche Verarbeitungsfunktion wird dafür zu $F(x) + x$ abgewandelt. Die Überlegung dabei ist, dass weitere Schichten die Resultate nicht verschlechtern können, wenn die Eingabe vorheriger Schichten noch unverändert vorhanden ist. Diese These wird durch die Ergebnisse der in \cite{DBLP:journals/corr/HeZRS15} dargelegten Experimenten gestützt. Residual Learning ist heute eine weit verbreitete Technologie beim Einsatz von Deep Learning.
+		 Mit ResNets wird ein Problem von Deep Neural Networks gelöst, bei dem der Trainingsfehler durch Hinzufügen zusätzlicher Verarbeitungsschichten vergrößert, statt verkleinert wird. Wenn nun eine Anzahl von Schichten größer als eins, nicht unbedingt das gesamte Netz, eine beliebige stetige Funktion $H(x)$ approximieren kann, so kann angenommen werden, dass dies auch für die Funktion $H(x) - x$ gilt. Anstatt zu erwarten, dass $H(x)$ gelernt wird, wird beim Residual Learning explizit eine Funktion $F(x) := H(x) - x$ approximiert. Die ursprüngliche Verarbeitungsfunktion wird dafür zu $F(x) + x$ abgewandelt. Die Überlegung dabei ist, dass weitere Schichten die Resultate nicht verschlechtern können, wenn die Eingabe vorheriger Schichten noch unverändert vorhanden ist. Diese These wird durch die Ergebnisse der in \cite{DBLP:journals/corr/HeZRS15} dargelegten Experimenten gestützt. Residual Learning ist heute eine weit verbreitete Technologie beim Einsatz von Deep Learning.
 	
 			
 	\section{Kamerakalibrierung}
 	\label{sec:cam}
-		Eine Kamera ermöglicht es, ein dreidimensionales Objekt auf eine zweidimensionale Ebene zu projizieren. Diese Projektion kann, wie in \cite{Hartley} beschrieben, mit dem in Abbildung \ref{fig:Proj} dargestellten Modell angenähert werden, in dem von Punkten im dreidimensionalen Raum ein Strahl durch einen bestimmten Fixpunkt, das Projektionszentrum, verläuft und dabei eine vorgegebene Ebene, die Bildebene, schneidet. Der Schnittpunkt dieses Strahls mit der Bildebene entspricht dem projizierten Punkt auf dem entstehenden Bild.\\
+		Eine Kamera ermöglicht es, ein dreidimensionales Objekt auf eine zweidimensionale Ebene zu projizieren. Diese Projektion kann, wie in \cite{Hartley} beschrieben, mit dem in Abbildung \ref{fig:Proj} dargestellten Lochkamera-Modell angenähert werden, in dem von Punkten $M$ im dreidimensionalen Raum ein Strahl durch einen bestimmten Fixpunkt, das Projektionszentrum $C$, verläuft und dabei eine vorgegebene Ebene, die Bildebene, schneidet. Der Schnittpunkt $m$ dieses Strahls mit der Bildebene entspricht dem projizierten Punkt auf dem entstehenden Bild.\\
 		\begin{figure}[h!]
 			\centering
 			\includegraphics[width=13cm]{img/Projektion.png}
-			\caption{Prinzip einer Lochkamera zur Projektion vom dreidimensionalen in den zweidimensionalen Raum nach \cite{Fusiello06elementsof}. Von einem realen Punkt $M$ verläuft ein Strahl durch das Projektionszentrum C und schneidet die Bildebene im Bildpunkt $m$. Das Koordinatensystem ist so gewählt, dass sich $C$ im Ursprung befindet und die Y-Achse parallel zur Bildebene verläuft. Die Z-Achse schneidet die Bildebene im Bildzentrum $P$. Hat $M$ die Entfernung $z$ auf der Z-Achse und $y$ auf der Y-Achse und der Abstand zwischen $C$ und der Bildebene ist $f$, so Beträgt die Entfernung von $m$ zur Z-Achse $\frac{fy}{z}$.}
+			\caption{Prinzip einer Lochkamera zur Projektion vom dreidimensionalen in den zweidimensionalen Raum nach \cite{Fusiello06elementsof}. Von einem realen Punkt $M$ verläuft ein Strahl durch das Projektionszentrum C und schneidet die Bildebene im Bildpunkt $m$. Das Koordinatensystem ist so gewählt, dass sich $C$ im Ursprung befindet und die Y-Achse parallel zur Bildebene verläuft. Die Z-Achse schneidet die Bildebene im Bildzentrum $P$. Hat $M$ die Entfernung $z$ von $C$ auf der Z-Achse und $y$ auf der Y-Achse und der Abstand zwischen $C$ und der Bildebene ist $f$, so Beträgt die Entfernung von $m$ zur Z-Achse $\frac{fy}{z}$.}
 			\label{fig:Proj}
 		\end{figure}
 		Offensichtlich werden alle Punkte im dreidimensionalen Raum, die auf einem Strahl durch das Projektionszentrum liegen, auf denselben Punkt in der Bildebene projiziert. Das Bild lässt sich also praktisch als eine Menge von Strahlen auffassen.\\
@@ -79,7 +79,7 @@
 		\begin{equation} \label{eq:proj}
 			zm = PM.
 		\end{equation}
-		$M$ bezeichnet dabei die homogenen Koordinaten eines Punktes im dreidimensionalen Raum und $m$ diejenigen von dessen Projektion auf der Bildebene, $z$ ist ein reeller Faktor ungleich Null. Homogene Koordinaten unterscheiden sich von Euklidischen durch einen Zusätzlichen Parameter, der oft mit $T$ bezeichnet wird. Eine Koordinate im zweidimensionalen Raum hat also die Form: $(X,Y,Z,T)^T$. Es gilt dabei, dass der Punkt $(x,y,1)$ in homogenen Koordinaten äquivalent ist zum Punkt $(x,y)$ in euklidischen Koordinaten. Es gilt also:
+		$M$ bezeichnet dabei die homogenen Koordinaten eines Punktes im dreidimensionalen Raum und $m$ diejenigen von dessen Projektion auf der Bildebene, $z$ ist ein reeller Faktor ungleich Null. Homogene Koordinaten unterscheiden sich von Euklidischen durch einen Zusätzlichen Parameter, der oft mit $T$ bezeichnet wird. Eine Koordinate im zweidimensionalen Raum hat also die Form: $(X,Y,T)^T$. Es gilt dabei, dass der Punkt $(x,y,1)$ in homogenen Koordinaten äquivalent ist zum Punkt $(x,y)$ in euklidischen Koordinaten. Es gilt also:
 		\begin{equation} \label{eq:eukhom}
 		\left(
 			\begin{array}{c}
@@ -121,10 +121,10 @@
 		\begin{itemize}
 			\item Die Entfernung $f$ zwischen dem Projektionszentrum und der Bildebene.
 			\item Die Koordinaten des Bildzentrums $P = (p_x,p_y)$ .
-			\item Höhe $s_x$ und Breite $s_y$ der Pixel.
+			\item Die Höhe $s_x$ und Breite $s_y$ der Pixel.
 			\item Der Scherungswinkel $\Theta$ zwischen den Achsen, der für Gewöhnlich $\frac{\Pi}{2}$ beträgt.
 		\end{itemize}
-		Diese Informationen lassen sich in der so genannten Kalibrierungsmatrix $K$ folgendermaßen Zusammenfassen:
+		Diese Informationen lassen sich in der so genannten Kalibrierungsmatrix $K$ folgendermaßen zusammenfassen:
 		\begin{equation}
 			K = 
 			\left[
