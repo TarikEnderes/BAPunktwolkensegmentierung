@@ -1,15 +1,15 @@
 \chapter{Experimente}
 	In diesem Kapitel sollen die im Rahmen der Arbeit durchgeführten Experimente aufgeführt, sowie deren Ergebnisse dargelegt und diskutiert werden. Ziel der Experimente ist es, Praktiken zu ermitteln, die bei der Anwendung des entwickelten Systems vorteilhaft sind und mit denen die bestmöglichen Ergebnisse produziert werden können.\\
-	Zunächst soll die Auswirkung des verwendeten Backbones auf die Leistungsfähigkeit des Netzes untersucht werden, wobei sich die Experimente auf MobileNetV2 konzentrieren. Dazu soll zunächst experimentell die ideale Trainingsdauer für die Verwendung von MobileNetV2 ermittelt werden. Anschließend daran wird das so erstellte Model auf einem Evaluierungs-Datensatz ausgewertet. Die Ergebnisse eines Netzes, das Xception65 als Backbone verwendet sollen ebenfalls diskutiert und mit denen von MobileNetV2 bezüglich deren Qualität und notwendiger Rechenzeit verglichen werden.\\
-	Als nächstes soll festgestellt werden, wie gut das auf Cityscapes trainiert Netz unter der Verwendung von MobileNetV2 Bilder aus KITTI-Datensatz verarbeitet und wie sich die Ergebnisse durch Anpassung des Trainingsverhaltens verbessern lassen. Als letztes sollen auf die in Abschnitt \ref{sec:algo} beschriebene Weise segmentierte Punktwolken betrachtet und diskutiert werden. Dabei soll vor allem auf den Zusammenhang zwischen der Qualität der segmentierten Bilder und der der Punktwolken geachtet werden.
+	Zunächst soll die Auswirkung des verwendeten Backbones auf die Leistungsfähigkeit des Netzes untersucht werden, wobei sich die Experimente auf MobileNetV2 konzentrieren. Dazu soll zunächst experimentell die ideale Trainingsdauer für die Verwendung von MobileNetV2 ermittelt werden. Anschließend daran wird das so trainierte Model auf einem Evaluierungs-Datensatz ausgewertet. Die Ergebnisse eines Netzes, das Xception65 als Backbone verwendet sollen ebenfalls diskutiert und mit denen von MobileNetV2 bezüglich deren Qualität und notwendiger Rechenzeit verglichen werden.\\
+	Als nächstes soll festgestellt werden, wie gut das auf Cityscapes trainiert Netz unter der Verwendung von MobileNetV2 Bilder aus dem KITTI-Datensatz verarbeitet und wie sich die Ergebnisse durch Anpassung des Trainingsverhaltens verbessern lassen. Als letztes sollen auf die in Abschnitt \ref{sec:algo} beschriebene Weise segmentierte Punktwolken betrachtet und diskutiert werden. Dabei soll vor allem auf den Zusammenhang zwischen der Qualität der segmentierten Bilder und der der Punktwolken geachtet werden.
 	\section{Backbones}
 		Für die Durchführung folgender Experimente wird der fein annotierte Cityscapes-Datensatz verwendet. Die Netze werden auf dem aus 2975 Bildern bestehenden Trainingssatz trainiert und auf dem 500 Bilder fassenden Validierungssatz ausgewertet.\\
-		Für jede Trainingsepoche werden aus dem Trainingssatz 1487 Bilder zufällig ausgewählt. Als Grundlernrate wird 0.007 gewählt. Der Trainingsfehler wird über die in \cite{Lovasz} beschriebene Lovasz-Funktion berechnet. Weitere Hyperparameter sind eine Dropout-Rate von 0.1,  eine L2 Regularisierungsrate von $4*10^{-5}$ und ein Momentum-Faktor von 0.9.\\
-		Die Netzwerkausgaben werden mittels der im Bereich Bildsegmentierung üblichen Intersection-over-union-Metrik (IoU) ausgewertet, die sich folgendermaßen berechnet:\\
+		Für jede Trainingsepoche werden aus dem Trainingssatz 1487 Bilder zufällig ausgewählt. Als Grundlernrate wird $0.007$ gewählt. Der Trainingsfehler wird über die in \cite{Lovasz} beschriebene Lovasz-Funktion berechnet. Weitere Hyperparameter sind eine Dropout-Rate von $0.1$,  eine L2 Regularisierungsrate von $4\cdot10^{-5}$ und ein Momentum-Faktor von $0.9$.\\
+		Die Netzwerkausgaben werden mittels der im Bereich Bildsegmentierung üblichen Intersection-over-Union-Metrik (IoU) ausgewertet, die sich folgendermaßen berechnet:\\
 		\begin{equation}
 			IoU = \frac{TP}{TP + FP + FN}
 		\end{equation}
-		Dabei steht TP für True Positives, also richtig erkannte Pixel, FP für False Positives und FN für False Negatives. Da in diesem System jedem  Pixel eine gültige Klasse zugeordnet wird, sind FP und FN hier stets identisch.
+		Dabei steht TP für True Positives, also richtig erkannte Pixel, FP für False Positives und FN für False Negatives. Da in diesem Verfahren jedem  Pixel eine gültige Klasse zugeordnet wird, sind FP und FN hier stets identisch.
 		
 		\subsection{MobileNetV2}
 			\label{sec:mn2}
@@ -120,8 +120,8 @@
 		\end{figure} 
 		
 		Wie in Tabelle \ref{lbl: XcVsMn} und Abbildung \ref{fig:XcVsMn} zu sehen ist, erzeugt das Model mit Xception65 durchwegs bessere Ergebnisse als das mit MobileNetV2, benötigt aber im Durchschnitt 97\% mehr Zeit für die Verarbeitung eines Eingabebildes.\\
-		Durch die Verwendung von Xception65 ist das Model außerdem in der Lage, alle Klassen des Datensatzes zu erkennen, auch wenn die IoU-Werte für die von MobileNetV2 nicht erkannten Klassen vergleichsweise niedrig sind. Eine besonders große Steigerung der Bewertung im Vergleich mit MobileNetV2 weist das Netz bei kleineren, zählbaren Objekten auf wie Personen (311\%) und Verkehrszeichen (295\%).\\
-		Abbildung \ref{fig:BspXc} zeigt beispielhafte Ergebnisse des Models aus dem Validierungs-Datensatz von Cityscapes.
+		Durch die Verwendung von Xception65 ist das Model außerdem in der Lage, alle Klassen des Datensatzes zu erkennen, auch wenn die IoU-Werte für die von MobileNetV2 nicht erkannten Klassen vergleichsweise niedrig sind. Eine besonders große Steigerung der Bewertung im Vergleich mit MobileNetV2 weist das Netz bei kleineren, zählbaren Objekten auf wie Personen (Verbesserung um 211\%) und Verkehrszeichen (Verbesserung um 195\%).\\
+		Abbildung \ref{fig:BspXc} zeigt beispielhafte Ergebnisse des Models auf dem Validierungs-Datensatz von Cityscapes.
 		
 		\begin{figure}[h!]
 			\centering
@@ -143,7 +143,6 @@
 		\end{figure} 
 		Wie man sieht, tritt bei den Ergebnissen auf dem KITTI-Datensatz bereits nach einer Epoche Verfeinerung mit KITTI-Daten eine deutliche Verbesserung auf. Weitere Trainingsepochen verbessern die Ergebnisse weiter, aber weniger erheblich. Gleichzeitig verschlechtert sich die Ausgabe für ein Bild aus dem Cityscapes-Datensatz in ähnlichem Maße. \\Das unterste Bild von Abbildung \ref{fig:Verf} zeigt die Ausgabe eines Models, das für 25 Epochen auf Cityscapes-Daten trainiert, für 5 Epochen mit KITTI-Daten verfeinert und anschließend für eine Epoche mit Cityscapes-Daten nachtrainiert ist. Wie man sieht, führt die Verfeinerung mit dem ursprünglichen Datensatz wieder zu einer Verschlechterung der Ergebnisse auf KITTI-Bildern und einer Verbesserung auf Cityscapes-Bildern.\\
 		Diese Beobachtungen bestärken die Vermutung, dass beim Trainieren des Netzes Overfitting auftritt.\\
-		
 		In einem nächsten Schritt soll untersucht werden, wie die Berücksichtigung der KITTI-Daten beim gesamten Lernprozess die Ergebnisse auf beiden Datensätzen beeinflusst. Dazu wird der annotierte KITTI-Datensatz geteilt in einen Trainings- und Evaluierungssatz zu je 100 Bildern. Dadurch wird es möglich, eine Aussagekräftige Bewertung in IoU-Metrik zu berechnen. Aufbauend auf dem vorherigen Experiment wird ein Model mit gemischten Daten für 24 Epochen trainiert (B) und ausgewertet. Danach wird es für eine Epoche ausschließlich mit KITTI-Daten verfeinert (C) und dann für eine weitere Epoche mit dem gesamten, gemischten Trainingssatz nachtrainiert (D). Damit ist das letzte Model 25 Epochen auf den gemischten Daten trainiert und hat damit genauso viele Lernschritte auf Cityscapes-Bilder absolviert wie das am besten Bewertete Model von Abschnitt \ref{sec:mn2} (A). Die Ergebnisse sind in Tabelle 6.3 eingetragen und in Abbildung \ref{fig:Verg} graphisch dargestellt. 
 		 
 		\begin{table}
