@@ -1,0 +1,103 @@
+Skript
+
+Herzlich Willkommen ... Segmentierung von Punktwolken mit Neuronalen Netzen.
+Vorab, was ist Segmentierung? (Umschalten) Bei Bildern heißt Segmentierung, dass das Bild in Regionen eingeteilt wird. 
+Diese Arbeit hat sich speziell mit pixelbasierter, semantischer Bildsegmentierung befasst.
+Pixelbasiert bedeutet dabei, dass jeder Pixel eines Bildes einzeln betrachtet und klassifiziert wird. Wenn ich über Segmentierung in Bildern spreche, sind immer pixelbasierte Verfahren gemeint.
+Pixelbasierte Bildsegmentierung wird in vier Kategorien unterteilt: Objekt-Segmentierung, Instanz-Segmentierung, Semantische Segmentierung und Panoptische Segmentierung
+Bei der Objekt-Segmentierung soll ein Bild on Vordergrund und Hintergrund unterteilt werden.
+Bei der Instanz-Segmentierung werden nur zählbare Objekte betrachtet und zwischen einzelnen Instanzen auf dem Bild unterschieden.
+Bei Semantischer Segmentierung wird jedem Pixel eine gültige Klasse zugeordnet und nicht zwischen Instanzen von zählbaren Objekten unterschieden.
+Panoptische Segmentierung stellt eine Mischung aus Panoptischer Segmentierung und Instanz-Segmentierung dar. Es soll also jeder Pixel gelabelt und zwischen Instanzen unterschieden werden.
+(Umschalten)
+Hier sieht man ein Beispiel für semantische Segmentierung. (Beschreibe Bilder)
+Offensichtlich ist dabei die Anzahl von Klassen bei jedem Bild gleich, was bei der Verwendung von Neuronalen Netzen hilfreich ist.
+Überträgt man die Idee auf Punktwolken, wird Segmentierung hier so verstanden, dass jedem Punkt ein Label zugewiesen wird.
+(Umschalten)
+Die Ziele und Anforderungen der Arbeit wurden folgendermaßen festgelegt:
+Es soll ein System zur semantischen Segmentierung von Bildern und Punktwolken entwickelt werden.
+Außerdem soll ein geeigneter öffentlicher Datensatz für Experimente damit ausgewählt werden.
+Dann sollten mit dem entwickelten System Experimente durchgeführt und Praktiken ermittelt werden, mit denen sich die Laufzeit und Qualität der Ergebnisse verbessern lässt.
+(Umschalten)
+Als nächstes erkläre ich ein wenig von der zugrundeligenden Theorie der Arbeit.
+Die Architektur, die in der Arbeit verwendet wird, basiert auf einem Convolutional Neural Network, kurz CNN.
+Neuronale Netze bestehen bekanntermaßen aus mehreren Verarbeitungsschichten.
+Ein CNN ist ein Neuronales Netz, das in mindestens einer Schicht eine Faltungsoperation mit einem gelernten Kernel durchführt.
+In der Regel werden in CNNs außerdem Pooling Layer eingesetzt, die die zu verarbeitende Datenmenge verringern, indem sie Matrizen zusammenfassen.
+Am verbreitetsten ist das Max-Pooling, bei dem aus einem quadratischen Bereich der Matrix der größte Wert ausgewählt und in die Ausgabe übernommen wird.
+Die letzte Schicht in einem CNN ist oft ein "Fully Connected Layer", bei der jeder Ausgabewert von jedem Eingabewert abhängt, wie bei den Schichten in einem MLP.
+Wenn hingegen nur Faltung eingesetzt wird, spricht man von einem Fully Convolutional CNN.
+(Umschalten)
+CNNs haben bestimmte Eigenschaften, die sie besonders geeignet für Bildverarbeitung machen.
+Vor allem kann man die Größe des Faltungskernels wählen. Wenn die Eingabematrix ein Bild ist, ist der Kernel in der Regel vernachlässigbar klein im Verhältnis dazu.
+Entsprechend ist der Speicherbredarf für die Gewichte in einem CNN recht klein.
+Eine weitere Nützliche Eigenschaft ist, dass jede Stelle im Bild gleich verarbeitet wird. 
+Dadurch wird Equivarianz erreicht, heißt, eine Translation in den Eingabedaten führt zu einer Translation in den Ausgabedaten.
+Außerdem ist die Größe einer Matrix bei der Faltung nicht relevant, außer für die Laufzeit.
+Das bedeutet, es können Bilder mit variabler Auflösung verarbeitet werden.
+(Umschaltung)
+Eine weitere Technologie, die das Netz in dieser Arbeit verwendet ist Atrous Convolution.
+Dabei wird ein spärlich bestückter Kernel für die Faltung verwendet. 
+Zwischen den Werten, die berücksichtigt werden, werden Löcher eingefügt, wie hier gezeigt.
+Der Abstand zwischen den berücksichtigten Werten, bzw. die Anzahl der Löcher wird durch die Erweiterungsrate angegeben.
+Hier gezeigt ist beispielsweise ein 3x3 Kernel mit einer Erweiterungsrate von 2, womit die Größe des Sichtfelds 5x5 beträgt.
+Das führt zu einer höheren Auflösung bei der Ausgabe und einem größeren Sichtfeld des Kernels bei gleichem Rechenaufwand. 
+(Umschalten)
+Die Vorteile von Atrous Convolution sind in dieser Abbildung dargestellt.
+Darin wird Atrous Convolution mit einer Faltung mit Down- und Upsampling verglichen.
+Wie man sieht, hat das Ergebniss von Atrous Convolution eine deutlich höhere Auflösung.
+(Umschalten)
+Ein auf Atrous Convolution aufbauendes Verfahren ist das Atrous Spatial Pyramid Pooling.
+Dabei werden parallel mehrere Schichten in das Netz eingebaut, die Atrous Convolution mit unterschiedlicher Erweiterungsrate durchführen.
+Aus den Ergebnissen dieser Schichten wird ein Tensor gebildet, der dann dimensionenübergreifend gefaltet wird.
+Durch Verwendung solcher Schichten soll Größeninvarianz erreicht werden.
+(Umschalten)
+Die Architektur, die in dieser Arbeit verwendet wird, verwendet außerdem ein Conditional Random Field, kurz CRF.
+CRFs stellen einen anderen Ansatz an Maschine Learning dar.
+Die meisten gebräuchlichen Architekturen versuchen, eine Funktion anzunähern, die eine Eingabe x auf eine Ausgabe y abbildet.
+CRFs versuchen eine Wahrscheinlichkeitsverteilung zu lernen, die beschreibt, mit welcher Wahrscheinlichkeit ein Mechanismus eine Ausgabe y erzeugt, wenn er ein x zur Verarbeitung erhält.
+Wie bei anderen Neuronalen Netzen wird dazu eine Funktion ausgewählt und ein Parameter dieser Funktion abhängig von den Trainingsdaten angepasst.
+Die Frage ist, welche Funktion günstig ist.
+Es soll eine Funktion mit großen Informationsgehalt, also möglichst großer Entropie ausgewählt werden.
+Es hat sich eingebürgert, die Verteilung als Makov-Kette erster Ordnung zu modellieren. 
+Damit trifft man die Annahme, dass ein Ausgangszustand nur vom Eingangszustand und nicht von früheren Zuständen abhängt.
+Nach diesem Modell ist die Funktion mit maximaler Energie die Exponentialfunktion.
+Das Training zielt auch bei CRFs auf die Minimierung einer Fehlerfunktion ab. 
+Dazu kann das Gradient-Descned-Verfahren verwendet werden. 
+Da die Exponentialfunktion konvex ist, existiert nur ein lokales Minimum, das gleichzeitig das globale Minimum ist.
+Der Gradient ist aber nicht trivial zu berechnen, weshalb sich dazu die Verwendung des Newton-Verfahrens eingebürgert hat.
+Hat man auf diese Weise die Wahrscheinlichkeitsverteilung für X nach Y ausgerechnet, ist man aber noch nicht fertig.
+Das Ziel ist es ja, einen Ausgabevektor y zu bestimmen. 
+Diesen durch ausprobieren herauszufinden ist aufwändig und oft nicht möglich.
+Wenn man aber wiederum die Verteilung als Markov-Kette annimmt, kann y effizient aufgrund des Viterbi-Algorithmus berechnet werden, auf den ich an dieser Stelle nicht weiter eingehen will.
+(Umschalten)
+Eine Praktik, die heute in fast allen Deep Neural Networks eingesetzt wird, ist Residual Learning.
+Dabei baut man "Abkürzungsschichten" in das Netz ein, über die die Werte, die an einer Stelle des Netzwerks auftreten, eine oder mehrere Verarbeitungsschichten überspringen und auf die Ausgabe einer späteren Schicht unver#ndert addiert werden.
+Als Deep Learning populär wurde, hat man festgelstellt, dass die Ergebnisse eines Netzes nicht unbedingt mit jeder weiteren Schicht besser werden, sondern zu viele Schichten sich sogar negativ auswirken.
+Residual Networks wurden als Lösung für dieses Problem vorgeschlagen.
+Die Idee ist, dass zusätzliche Schichten die Ausgabe nicht verschlechtern werden, wenn die Information aus früheren Schichten noch unverändert vorhanden ist.
+(Umschalten)
+Diese Arbeit beschäftigt sich nicht nur mit Maschine Learning, sondern auch mit Geometrie, genauer gesagt projektiver Geometrie.
+Projektive Geometrie kann als Erweiterung der herkömmlichen, euklidischen Geometrie durch Punkte im Unendlichen bezeichnet werden, die sich auf einer Geraden im Unendlichen befinden.
+Durch diese unendlich weit entfernten Punkte wird es vermieden, den Spezialfall von parallelen Geraden zu beachten, die sich an einem Punkt im Unendlichen schneiden.
+Eine Anwendung von projektiver Geometrie ist die Kamerprojektion.
+(Umschalten)
+Eine Kamera ermöglicht es, einen dreidimensionalen Raum auf einer zweidimensionalen Fläche abzubilden.
+Die Funktionsweise kann am besten an dem Modell der Lochkamera erklärt werden, das hier zu sehen ist.
+Eine Strahl verläuft von einem Punkt M im dreidimensionalen Raum durch das Projektionszentrum C und schneidet eine Bildebene in einem Bildpunk m, auf dem der reale Punkt abgebildet wird.
+Offensichtlich werden alle dreidimensionalen Punkte, die auf einem einzigen Strahl liegen auf demselben Bildpunkt abgebildet.
+Man kann also das Bild als eine Menge von Strahlen auffassen.
+Diese Projektion führt zu einem Verlust an Informationen und zwar über  Entfernungen, Längen, Winkel, Verhältnisse und dementsprechend Formen.
+Um von einem Bild auf die Realität schließen zu können ist deswegen Kalibrierung notwendig.
+(Umschalten)
+Kamerakalibrierung ermöglicht, zu berechen, wo ein Punkt im dreidimensionalen Raum auf der Bildebene abgebildet wird.
+Außerdem lässt sich dadurch aus zwei Punkten im Bild der Winkel zwischen den Strahlen bestimmen, aus denen sie projeziert wurden.
+Damit kann beispielsweise ermittelt werden, wie groß eine Fläche auf einem Bild in der Realität ist oder ob eine Ellipsie auf einem Bild in der Wirklichkeit ein Kreis ist.
+(Umschalten)
+Für die Kamerakalibrierung sind bestimmte Informationen notwendig.
+Und zwar die Entfernung zwischen Projektionszentrum und Bildbene und die Position des Bildzentrums.
+Außerdem benötigt man Informationen über Höhe und Breite der Pixel und den Scherungswinkel zwischen den Achsen, aber da diese Werte beinahe immer gleich sind, werden sie oft nicht explizit angegeben.
+Wenn man dann noch die Position und Ausrichtung der Kamera kennt, lässt sich eine Projektionsmatrix berechnen, mit der sich die Koordinaten eines Bildpunktes zu einem realen Punkt durch Matrixmultiplikation bestimmen lassen.
+(Umschalten)
+
+
